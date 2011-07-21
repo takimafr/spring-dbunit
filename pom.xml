@@ -5,6 +5,19 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<scm>
+		<connection>scm:git:git://github.com/excilys/spring-dbunit.git</connection>
+		<developerConnection>scm:git:git@github.com:excilys/spring-dbunit.git</developerConnection>
+		<url>https://github.com/excilys/spring-dbunit.git</url>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>excilys-release</id>
+			<url>http://repository.excilys.com/content/repositories/releases</url>
+		</repository>
+	</distributionManagement>
+
 	<modules>
 		<module>spring-dbunit-core</module>
 		<module>spring-dbunit-test</module>
