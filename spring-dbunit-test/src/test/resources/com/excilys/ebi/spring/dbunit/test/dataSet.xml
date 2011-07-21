@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="dataset.xsd">
+
+	<MY_ENTITY ID="id1" NAME="name1" />
+	<MY_ENTITY ID="id2" NAME="name2" />
+	<MY_ENTITY ID="id3" NAME="name3" />
+	<MY_ENTITY ID="id4" NAME="name4" />
+
+</dataset>

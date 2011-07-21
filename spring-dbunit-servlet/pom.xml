@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>spring-dbunit</artifactId>
+		<groupId>com.excilys.ebi</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>spring-dbunit-servlet</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.excilys.ebi</groupId>
+			<artifactId>spring-dbunit-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>
