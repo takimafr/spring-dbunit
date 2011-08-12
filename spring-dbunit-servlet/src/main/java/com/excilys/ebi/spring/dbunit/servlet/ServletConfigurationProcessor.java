@@ -43,9 +43,9 @@ public class ServletConfigurationProcessor {
 
 	public static final String DATASETS_INIT_PARAM = SPRING_DBUNIT_INIT_PARAM_PREFIX + "dataSets";
 
-	public static final String SETUPOPERATION_INIT_PARAM = SPRING_DBUNIT_INIT_PARAM_PREFIX + "setUpOperation";
+	public static final String SETUP_OPERATION_INIT_PARAM = SPRING_DBUNIT_INIT_PARAM_PREFIX + "setUpOperation";
 
-	public static final String TEARDOWNOPERATION_INIT_PARAM = SPRING_DBUNIT_INIT_PARAM_PREFIX + "tearDownOperation";
+	public static final String TEARDOWN_OPERATION_INIT_PARAM = SPRING_DBUNIT_INIT_PARAM_PREFIX + "tearDownOperation";
 
 	public static final String FORMAT_INIT_PARAM = SPRING_DBUNIT_INIT_PARAM_PREFIX + "format";
 
@@ -69,11 +69,32 @@ public class ServletConfigurationProcessor {
 
 	public DataSetConfiguration getConfiguration(ServletContext servletContext) throws IOException, DatabaseUnitException {
 
-		DataSetFormat format = getDataSetFormat(servletContext);
-		DBOps setUpOperation = getSetUpOperation(servletContext);
-		DBOps tearDownOperation = getTearDownOperationInitParam(servletContext);
-		DBType dbType = getDBType(servletContext);
-		String dataSourceSpringName = getDataSourceSpringName(servletContext);
+		DataSetFormat format = buildInitParam(servletContext, FORMAT_INIT_PARAM, DEFAULT_DATASET_FORMAT, new InitFunction<DataSetFormat>() {
+			public DataSetFormat apply(String in) {
+				return DataSetFormat.valueOf(in);
+			}
+		});
+		DBOps setUpOperation = buildInitParam(servletContext, SETUP_OPERATION_INIT_PARAM, DEFAULT_SETUP_OPERATION, new InitFunction<DBOps>() {
+			public DBOps apply(String in) {
+				return DBOps.valueOf(in);
+			}
+		});
+		DBOps tearDownOperation = buildInitParam(servletContext, TEARDOWN_OPERATION_INIT_PARAM, DEFAULT_TEARDOWN_OPERATION, new InitFunction<DBOps>() {
+			public DBOps apply(String in) {
+				return DBOps.valueOf(in);
+			}
+		});
+		DBType dbType = buildInitParam(servletContext, DB_TYPE_INIT_PARAM, DEFAULT_DB_TYPE, new InitFunction<DBType>() {
+			public DBType apply(String in) {
+				return DBType.valueOf(in);
+			}
+		});
+		String dataSourceSpringName = buildInitParam(servletContext, DATASOURCE_SPRING_NAME_INIT_PARAM, DEFAULT_DATASOURCE_SPRING_NAME, new InitFunction<String>() {
+			public String apply(String in) {
+				return in;
+			}
+		});
+
 		List<String> dataSetsLocations = getDataSetsLocations(servletContext);
 
 		List<IDataSet> dataSets = loadDataSets(dataSetsLocations, format);
@@ -82,29 +103,13 @@ public class ServletConfigurationProcessor {
 				dbType.getDataTypeFactory());
 	}
 
-	private DataSetFormat getDataSetFormat(ServletContext servletContext) {
-		String formatInitParam = servletContext.getInitParameter(FORMAT_INIT_PARAM);
-		return StringUtils.hasLength(formatInitParam) ? DataSetFormat.valueOf(formatInitParam.trim()) : DEFAULT_DATASET_FORMAT;
+	private interface InitFunction<T> {
+		T apply(String in);
 	}
 
-	private DBOps getSetUpOperation(ServletContext servletContext) {
-		String setUpOperationInitParam = servletContext.getInitParameter(SETUPOPERATION_INIT_PARAM);
-		return StringUtils.hasLength(setUpOperationInitParam) ? DBOps.valueOf(setUpOperationInitParam.trim()) : DEFAULT_SETUP_OPERATION;
-	}
-
-	private DBOps getTearDownOperationInitParam(ServletContext servletContext) {
-		String tearDownOperationInitParam = servletContext.getInitParameter(TEARDOWNOPERATION_INIT_PARAM);
-		return StringUtils.hasLength(tearDownOperationInitParam) ? DBOps.valueOf(tearDownOperationInitParam.trim()) : DEFAULT_TEARDOWN_OPERATION;
-	}
-
-	private DBType getDBType(ServletContext servletContext) {
-		String dbTypeInitParam = servletContext.getInitParameter(DB_TYPE_INIT_PARAM);
-		return StringUtils.hasLength(dbTypeInitParam) ? DBType.valueOf(dbTypeInitParam.trim()) : DEFAULT_DB_TYPE;
-	}
-
-	private String getDataSourceSpringName(ServletContext servletContext) {
-		String dataSourceSpringNameInitParam = servletContext.getInitParameter(DATASOURCE_SPRING_NAME_INIT_PARAM);
-		return StringUtils.hasText(dataSourceSpringNameInitParam) ? dataSourceSpringNameInitParam.trim() : DEFAULT_DATASOURCE_SPRING_NAME;
+	private <T> T buildInitParam(ServletContext servletContext, String name, T defaultValue, InitFunction<T> function) {
+		String initParam = servletContext.getInitParameter(name);
+		return StringUtils.hasLength(initParam) ? function.apply(initParam.trim()) : defaultValue;
 	}
 
 	private List<String> getDataSetsLocations(ServletContext servletContext) {

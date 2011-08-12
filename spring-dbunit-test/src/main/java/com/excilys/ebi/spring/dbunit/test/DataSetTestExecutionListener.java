@@ -15,14 +15,13 @@
  */
 package com.excilys.ebi.spring.dbunit.test;
 
-import org.dbunit.operation.DatabaseOperation;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import com.excilys.ebi.spring.dbunit.DataLoader;
 import com.excilys.ebi.spring.dbunit.DataSetConfiguration;
-import com.excilys.ebi.spring.dbunit.DataSetFunction;
 import com.excilys.ebi.spring.dbunit.DefaultDataLoader;
+import com.excilys.ebi.spring.dbunit.Phase;
 
 /**
  * Spring test framework TestExecutionListener for executing DBUnit operations
@@ -47,11 +46,7 @@ public class DataSetTestExecutionListener extends AbstractTestExecutionListener 
 	 */
 	@Override
 	public void beforeTestMethod(TestContext testContext) throws Exception {
-		doWithDataSet(testContext, new DataSetFunction() {
-			public DatabaseOperation getOperation(DataSetConfiguration configuration) {
-				return configuration.getSetUpOperation();
-			}
-		});
+		doWithDataSet(testContext, Phase.SETUP);
 	}
 
 	/**
@@ -59,15 +54,11 @@ public class DataSetTestExecutionListener extends AbstractTestExecutionListener 
 	 */
 	@Override
 	public void afterTestMethod(TestContext testContext) throws Exception {
-		doWithDataSet(testContext, new DataSetFunction() {
-			public DatabaseOperation getOperation(DataSetConfiguration configuration) {
-				return configuration.getTearDownOperation();
-			}
-		});
+		doWithDataSet(testContext, Phase.TEARDOWN);
 	}
 
-	private void doWithDataSet(TestContext testContext, DataSetFunction function) throws Exception {
+	private void doWithDataSet(TestContext testContext, Phase phase) throws Exception {
 		DataSetConfiguration configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.doWithDataSet(testContext.getApplicationContext(), configuration, function);
+		dataLoader.doWithDataSet(testContext.getApplicationContext(), configuration, phase);
 	}
 }

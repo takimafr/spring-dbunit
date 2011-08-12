@@ -22,5 +22,5 @@ import org.springframework.context.ApplicationContext;
  */
 public interface DataLoader {
 
-	void doWithDataSet(ApplicationContext applicationContext, DataSetConfiguration configuration, DataSetFunction function) throws Exception;
+	void doWithDataSet(ApplicationContext applicationContext, DataSetConfiguration configuration, Phase phase) throws Exception;
 }

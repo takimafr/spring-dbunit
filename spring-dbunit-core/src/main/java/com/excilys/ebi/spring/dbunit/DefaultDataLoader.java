@@ -33,11 +33,11 @@ import org.springframework.util.StringUtils;
  */
 public class DefaultDataLoader implements DataLoader {
 
-	public void doWithDataSet(ApplicationContext applicationContext, DataSetConfiguration configuration, DataSetFunction function) throws Exception {
-		DataSource dataSource = lookUpDataSource(configuration, applicationContext);
+	public void doWithDataSet(ApplicationContext applicationContext, DataSetConfiguration configuration, Phase phase) throws Exception {
 
 		if (configuration != null) {
-			executeOperation(function.getOperation(configuration), configuration, dataSource);
+			DataSource dataSource = lookUpDataSource(configuration, applicationContext);
+			executeOperation(phase.getOperation(configuration), configuration, dataSource, phase);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class DefaultDataLoader implements DataLoader {
 	/**
 	 * Execute a DBUbit operation
 	 */
-	private void executeOperation(DatabaseOperation operation, DataSetConfiguration configuration, DataSource dataSource) throws Exception {
+	private void executeOperation(DatabaseOperation operation, DataSetConfiguration configuration, DataSource dataSource, Phase phase) throws Exception {
 
 		Connection connection = null;
 
@@ -79,7 +79,7 @@ public class DefaultDataLoader implements DataLoader {
 			// if operation is CLEAN INSERT, change it into INSERT after first
 			// DataSet so data is not deleted
 			boolean first = true;
-			for (IDataSet dataSet : configuration.getDataSets()) {
+			for (IDataSet dataSet : phase.getDataSets(configuration)) {
 				if (!first && operation.equals(DatabaseOperation.CLEAN_INSERT)) {
 					operation = DatabaseOperation.INSERT;
 				}
