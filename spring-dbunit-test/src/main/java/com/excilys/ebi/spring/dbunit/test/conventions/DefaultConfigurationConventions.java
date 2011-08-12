@@ -1,12 +1,12 @@
 /*
  * Copyright 2010-2011 eBusiness Information, Groupe Excilys (www.excilys.com)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -69,7 +69,7 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	/**
 	 * Generate a modified version of the supplied location and returns it.
 	 * <p>
-	 * A plain path, e.g. &quot;context.xml&quot;, will be treated as a
+	 * A plain path, e.g. &quot;myDataSet.xml&quot;, will be treated as a
 	 * classpath resource from the same package in which the specified class is
 	 * defined. A path starting with a slash is treated as a fully qualified
 	 * class path location, e.g.: &quot;/com/example/whatever/foo.xml&quot;. A
