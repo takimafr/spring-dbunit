@@ -16,8 +16,8 @@ Use cases examples :
 
 Have a look at the Wiki for mdules documentation :
 
-* [Test support](/excilys/spring-dbunit/wiki/spring-dbunit-test)
-* [Servlet support](/excilys/spring-dbunit/wiki/spring-dbunit-servlet)
+* [Test support](/excilys/spring-dbunit/wiki/spring-dbunit-test-module)
+* [Servlet support](/excilys/spring-dbunit/wiki/spring-dbunit-servlet-module)
 
 ## Where are the binaries?
 
