@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>spring-dbunit</artifactId>
-		<groupId>com.excilys.ebi</groupId>
-		<version>1.0.1-SNAPSHOT</version>
+		<groupId>com.excilys.ebi.spring-dbunit</groupId>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>spring-dbunit-core</artifactId>
 
