@@ -34,14 +34,6 @@
 
 	<repositories>
 		<repository>
-			<id>jboss-public</id>
-			<url>https://repository.jboss.org/nexus/content/groups/public</url>
-		</repository>
-		<repository>
-			<id>Version99</id>
-			<url>http://no-commons-logging.zapto.org/mvn2</url>
-		</repository>
-		<repository>
 			<id>excilys-thirdparty</id>
 			<url>http://repository.excilys.com/content/repositories/thirdparty</url>
 		</repository>
