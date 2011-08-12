@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>spring-dbunit</artifactId>
 		<groupId>com.excilys.ebi</groupId>
-		<version>0.0.1</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>spring-dbunit-test</artifactId>
 
