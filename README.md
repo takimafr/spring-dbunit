@@ -14,7 +14,7 @@ Use cases examples :
 
 ## Documentation
 
-Have a look at the Wiki for mdules documentation :
+Have a look at the Wiki for modules documentation :
 
 * [Test support](/excilys/spring-dbunit/wiki/spring-dbunit-test-module)
 * [Servlet support](/excilys/spring-dbunit/wiki/spring-dbunit-servlet-module)
@@ -27,7 +27,13 @@ You can find the binaries in our maven repository :
 ``` xml
 	<dependency>
 		<groupId>com.excilys.ebi</groupId>
-		<artifactId>spring-dbunit</artifactId>
+		<artifactId>spring-dbunit-test</artifactId>
+		<version>1.0.0</version>
+	</dependency>
+
+	<dependency>
+		<groupId>com.excilys.ebi</groupId>
+		<artifactId>spring-dbunit-servlet</artifactId>
 		<version>1.0.0</version>
 	</dependency>
 ```
