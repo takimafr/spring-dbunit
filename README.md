@@ -10,7 +10,7 @@ Use cases examples :
 
 * "pseudo" unit tests on a DAO layer, with an in-memory database like [HSQLDB](http://hsqldb.org) or [H2](http://www.h2database.com) and a schema automatically created with Hibernate hibernate.hbm2ddl.auto=create-drop.
 * GUI integration tests with Selenium, with a persistent database and an existing schema.
-* application prototype development, with data reloaded at application startup
+* application prototype development, with data reloaded on application startup
 
 ## Documentation
 
@@ -25,15 +25,15 @@ You can find the binaries in our maven repository :
 [http://repository.excilys.com/content/repositories/releases](http://repository.excilys.com/content/repositories/releases)
 
 ``` xml
-	<dependency>
-		<groupId>com.excilys.ebi</groupId>
-		<artifactId>spring-dbunit-test</artifactId>
-		<version>1.0.0</version>
-	</dependency>
+<dependency>
+	<groupId>com.excilys.ebi</groupId>
+	<artifactId>spring-dbunit-test</artifactId>
+	<version>1.0.0</version>
+</dependency>
 
-	<dependency>
-		<groupId>com.excilys.ebi</groupId>
-		<artifactId>spring-dbunit-servlet</artifactId>
-		<version>1.0.0</version>
-	</dependency>
+<dependency>
+	<groupId>com.excilys.ebi</groupId>
+	<artifactId>spring-dbunit-servlet</artifactId>
+	<version>1.0.0</version>
+</dependency>
 ```
