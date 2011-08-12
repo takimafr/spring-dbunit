@@ -16,8 +16,8 @@ Use cases examples :
 
 Have a look at the Wiki for mdules documentation :
 
-* [Test support](wiki/spring-dbunit-test)
-* [Servlet support](wiki/spring-dbunit-servlet)
+* [Test support](spring-dbunit/wiki/spring-dbunit-test)
+* [Servlet support](spring-dbunit/wiki/spring-dbunit-servlet)
 
 ## Where are the binaries?
 
