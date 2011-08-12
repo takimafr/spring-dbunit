@@ -24,9 +24,9 @@ import java.lang.annotation.Target;
 
 import org.dbunit.dataset.IDataSet;
 
-import com.excilys.ebi.spring.dbunit.DBOps;
-import com.excilys.ebi.spring.dbunit.DBType;
-import com.excilys.ebi.spring.dbunit.DataSetFormat;
+import com.excilys.ebi.spring.dbunit.config.DBOp;
+import com.excilys.ebi.spring.dbunit.config.DBType;
+import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
 
 /**
  * Indicates that a test class or a test method has to load and purge the
@@ -51,14 +51,14 @@ public @interface DataSet {
 	String[] locations() default {};
 
 	/**
-	 * @return DBUnit operation on setup (default : {@link DBOps#CLEAN_INSERT})
+	 * @return DBUnit operation on setup (default : {@link DBOp#CLEAN_INSERT})
 	 */
-	DBOps setUpOperation() default DBOps.CLEAN_INSERT;
+	DBOp setUpOperation() default DBOp.CLEAN_INSERT;
 
 	/**
-	 * @return DBUnit operation on teardown (default : {@link DBOps#NONE})
+	 * @return DBUnit operation on teardown (default : {@link DBOp#NONE})
 	 */
-	DBOps tearDownOperation() default DBOps.NONE;
+	DBOp tearDownOperation() default DBOp.NONE;
 
 	/**
 	 * @return {@link IDataSet} file format (default : {@link DataSetFormat#FLAT})

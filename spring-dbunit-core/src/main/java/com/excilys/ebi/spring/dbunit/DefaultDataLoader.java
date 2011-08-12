@@ -28,12 +28,15 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.Phase;
+
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
 public class DefaultDataLoader implements DataLoader {
 
-	public void doWithDataSet(ApplicationContext applicationContext, DataSetConfiguration configuration, Phase phase) throws Exception {
+	public void execute(ApplicationContext applicationContext, DataSetConfiguration configuration, Phase phase) throws Exception {
 
 		if (configuration != null) {
 			DataSource dataSource = lookUpDataSource(configuration, applicationContext);

@@ -17,10 +17,13 @@ package com.excilys.ebi.spring.dbunit;
 
 import org.springframework.context.ApplicationContext;
 
+import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.Phase;
+
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
 public interface DataLoader {
 
-	void doWithDataSet(ApplicationContext applicationContext, DataSetConfiguration configuration, Phase phase) throws Exception;
+	void execute(ApplicationContext applicationContext, DataSetConfiguration configuration, Phase phase) throws Exception;
 }

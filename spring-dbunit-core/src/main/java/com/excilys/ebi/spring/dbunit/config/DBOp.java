@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.excilys.ebi.spring.dbunit;
+package com.excilys.ebi.spring.dbunit.config;
 
 import org.dbunit.operation.DatabaseOperation;
 import org.springframework.core.Constants;
@@ -21,7 +21,7 @@ import org.springframework.core.Constants;
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
-public enum DBOps {
+public enum DBOp {
 
 	/** Nothing, @see {@link DatabaseOperation.#NONE} */
 	NONE,

@@ -27,8 +27,6 @@ import java.util.Map;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.datatype.IDataTypeFactory;
-import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -38,7 +36,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.TestContext;
 import org.springframework.util.ObjectUtils;
 
-import com.excilys.ebi.spring.dbunit.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.DBOp;
+import com.excilys.ebi.spring.dbunit.config.DBType;
+import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.test.conventions.ConfigurationConventions;
 import com.excilys.ebi.spring.dbunit.test.conventions.DefaultConfigurationConventions;
 
@@ -109,11 +109,11 @@ public class TestConfigurationProcessor {
 	private DataSetConfiguration buildConfiguration(DataSet dataSetAnnotation, TestContext testContext) throws DataSetException, IOException {
 		List<IDataSet> dataSets = buildDataSets(dataSetAnnotation, testContext);
 		String dataSourceSpringName = dataSetAnnotation.dataSourceSpringName();
-		DatabaseOperation setUpOperation = dataSetAnnotation.setUpOperation().getDatabaseOperation();
-		DatabaseOperation tearDownOperation = dataSetAnnotation.tearDownOperation().getDatabaseOperation();
-		IDataTypeFactory dataTypeFactory = dataSetAnnotation.dbType().getDataTypeFactory();
+		DBOp setUpOp = dataSetAnnotation.setUpOperation();
+		DBOp tearDownOp = dataSetAnnotation.tearDownOperation();
+		DBType dbType = dataSetAnnotation.dbType();
 
-		return new DataSetConfiguration(dataSets, dataSourceSpringName, setUpOperation, tearDownOperation, dataTypeFactory);
+		return new DataSetConfiguration(dataSets, dataSourceSpringName, setUpOp, tearDownOp, dbType);
 	}
 
 	/**

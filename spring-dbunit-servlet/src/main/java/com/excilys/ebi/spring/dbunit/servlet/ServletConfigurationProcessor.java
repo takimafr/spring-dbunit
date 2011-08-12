@@ -29,10 +29,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StringUtils;
 
-import com.excilys.ebi.spring.dbunit.DBOps;
-import com.excilys.ebi.spring.dbunit.DBType;
-import com.excilys.ebi.spring.dbunit.DataSetConfiguration;
-import com.excilys.ebi.spring.dbunit.DataSetFormat;
+import com.excilys.ebi.spring.dbunit.config.DBOp;
+import com.excilys.ebi.spring.dbunit.config.DBType;
+import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
 
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
@@ -57,9 +57,9 @@ public class ServletConfigurationProcessor {
 
 	public static final DataSetFormat DEFAULT_DATASET_FORMAT = DataSetFormat.FLAT;
 
-	public static final DBOps DEFAULT_SETUP_OPERATION = DBOps.CLEAN_INSERT;
+	public static final DBOp DEFAULT_SETUP_OPERATION = DBOp.CLEAN_INSERT;
 
-	public static final DBOps DEFAULT_TEARDOWN_OPERATION = DBOps.NONE;
+	public static final DBOp DEFAULT_TEARDOWN_OPERATION = DBOp.NONE;
 
 	public static final DBType DEFAULT_DB_TYPE = DBType.HSQLDB;
 
@@ -74,14 +74,14 @@ public class ServletConfigurationProcessor {
 				return DataSetFormat.valueOf(in);
 			}
 		});
-		DBOps setUpOperation = buildInitParam(servletContext, SETUP_OPERATION_INIT_PARAM, DEFAULT_SETUP_OPERATION, new InitFunction<DBOps>() {
-			public DBOps apply(String in) {
-				return DBOps.valueOf(in);
+		DBOp setUpOperation = buildInitParam(servletContext, SETUP_OPERATION_INIT_PARAM, DEFAULT_SETUP_OPERATION, new InitFunction<DBOp>() {
+			public DBOp apply(String in) {
+				return DBOp.valueOf(in);
 			}
 		});
-		DBOps tearDownOperation = buildInitParam(servletContext, TEARDOWN_OPERATION_INIT_PARAM, DEFAULT_TEARDOWN_OPERATION, new InitFunction<DBOps>() {
-			public DBOps apply(String in) {
-				return DBOps.valueOf(in);
+		DBOp tearDownOperation = buildInitParam(servletContext, TEARDOWN_OPERATION_INIT_PARAM, DEFAULT_TEARDOWN_OPERATION, new InitFunction<DBOp>() {
+			public DBOp apply(String in) {
+				return DBOp.valueOf(in);
 			}
 		});
 		DBType dbType = buildInitParam(servletContext, DB_TYPE_INIT_PARAM, DEFAULT_DB_TYPE, new InitFunction<DBType>() {
@@ -99,8 +99,7 @@ public class ServletConfigurationProcessor {
 
 		List<IDataSet> dataSets = loadDataSets(dataSetsLocations, format);
 
-		return new DataSetConfiguration(dataSets, dataSourceSpringName, setUpOperation.getDatabaseOperation(), tearDownOperation.getDatabaseOperation(),
-				dbType.getDataTypeFactory());
+		return new DataSetConfiguration(dataSets, dataSourceSpringName, setUpOperation, tearDownOperation, dbType);
 	}
 
 	private interface InitFunction<T> {

@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.excilys.ebi.spring.dbunit.DataLoader;
-import com.excilys.ebi.spring.dbunit.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.DefaultDataLoader;
-import com.excilys.ebi.spring.dbunit.Phase;
+import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.Phase;
 
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
@@ -45,7 +45,7 @@ public class DataLoaderListener implements ServletContextListener {
 
 		try {
 			configuration = configurationProcessor.getConfiguration(sc);
-			doWithDataSet(sc, Phase.SETUP);
+			runPhase(sc, Phase.SETUP);
 
 		} catch (Exception e) {
 			LOGGER.error("Error while initializing DBUnit data", e);
@@ -58,7 +58,7 @@ public class DataLoaderListener implements ServletContextListener {
 		ServletContext sc = sce.getServletContext();
 
 		try {
-			doWithDataSet(sc, Phase.TEARDOWN);
+			runPhase(sc, Phase.TEARDOWN);
 
 		} catch (Exception e) {
 			LOGGER.error("Error while cleaning up DBUnit data", e);
@@ -66,7 +66,7 @@ public class DataLoaderListener implements ServletContextListener {
 		}
 	}
 
-	private void doWithDataSet(ServletContext sc, Phase phase) throws Exception {
-		dataLoader.doWithDataSet(WebApplicationContextUtils.getWebApplicationContext(sc), configuration, phase);
+	private void runPhase(ServletContext sc, Phase phase) throws Exception {
+		dataLoader.execute(WebApplicationContextUtils.getWebApplicationContext(sc), configuration, phase);
 	}
 }

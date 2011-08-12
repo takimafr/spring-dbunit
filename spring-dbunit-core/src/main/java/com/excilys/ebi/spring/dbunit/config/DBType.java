@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.excilys.ebi.spring.dbunit;
+package com.excilys.ebi.spring.dbunit.config;
 
 import org.dbunit.dataset.datatype.IDataTypeFactory;
 import org.dbunit.ext.db2.Db2DataTypeFactory;
@@ -51,7 +51,7 @@ public enum DBType {
 		this.dataTypeFactoryClass = dataTypeFactoryClass;
 	}
 
-	public IDataTypeFactory getDataTypeFactory() {
+	IDataTypeFactory getDataTypeFactory() {
 
 		// doesn't really matter if it's not synchronized...
 		if (dataTypeFactory == null) {

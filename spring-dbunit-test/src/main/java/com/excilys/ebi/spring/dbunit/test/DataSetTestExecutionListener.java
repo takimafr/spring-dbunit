@@ -19,9 +19,9 @@ import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import com.excilys.ebi.spring.dbunit.DataLoader;
-import com.excilys.ebi.spring.dbunit.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.DefaultDataLoader;
-import com.excilys.ebi.spring.dbunit.Phase;
+import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.Phase;
 
 /**
  * Spring test framework TestExecutionListener for executing DBUnit operations
@@ -59,6 +59,6 @@ public class DataSetTestExecutionListener extends AbstractTestExecutionListener 
 
 	private void doWithDataSet(TestContext testContext, Phase phase) throws Exception {
 		DataSetConfiguration configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.doWithDataSet(testContext.getApplicationContext(), configuration, phase);
+		dataLoader.execute(testContext.getApplicationContext(), configuration, phase);
 	}
 }
