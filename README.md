@@ -21,19 +21,4 @@ Have a look at the Wiki for modules documentation :
 
 ## Where are the binaries?
 
-You can find the binaries in our maven repository :
-[http://repository.excilys.com/content/repositories/releases](http://repository.excilys.com/content/repositories/releases)
-
-``` xml
-<dependency>
-	<groupId>com.excilys.ebi</groupId>
-	<artifactId>spring-dbunit-test</artifactId>
-	<version>1.0.0</version>
-</dependency>
-
-<dependency>
-	<groupId>com.excilys.ebi</groupId>
-	<artifactId>spring-dbunit-servlet</artifactId>
-	<version>1.0.0</version>
-</dependency>
-```
+See [Maven](/excilys/spring-dbunit/wiki/maven) Wiki page.
