@@ -17,6 +17,8 @@ package com.excilys.ebi.spring.dbunit.config;
 
 import java.util.List;
 
+import org.dbunit.dataset.CompositeDataSet;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.datatype.IDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
@@ -26,7 +28,7 @@ import org.dbunit.operation.DatabaseOperation;
  */
 public class DataSetConfiguration {
 
-	private final List<IDataSet> dataSets;
+	private final IDataSet dataSet;
 
 	private final String dataSourceSpringName;
 
@@ -36,16 +38,19 @@ public class DataSetConfiguration {
 
 	private final DBType dbType;
 
-	public DataSetConfiguration(List<IDataSet> dataSets, String dataSourceSpringName, DBOp setUpOp, DBOp tearDownOp, DBType dbType) {
-		this.dataSets = dataSets;
+	public DataSetConfiguration(List<IDataSet> dataSets, String dataSourceSpringName, DBOp setUpOp, DBOp tearDownOp, DBType dbType) throws DataSetException {
+
+		IDataSet singleDataSet = dataSets.size() == 1 ? dataSets.get(0) : new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
+
+		this.dataSet = singleDataSet;
 		this.dataSourceSpringName = dataSourceSpringName;
 		this.setUpOp = setUpOp;
 		this.tearDownOp = tearDownOp;
 		this.dbType = dbType;
 	}
 
-	public List<IDataSet> getDataSets() {
-		return dataSets;
+	public IDataSet getDataSet() {
+		return dataSet;
 	}
 
 	public String getDataSourceSpringName() {

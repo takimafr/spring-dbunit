@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
-import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -78,17 +77,7 @@ public class DefaultDataLoader implements DataLoader {
 			DatabaseConnection databaseConnection = new DatabaseConnection(connection);
 			databaseConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN, "\"?\"");
 			databaseConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, configuration.getDataTypeFactory());
-
-			// if operation is CLEAN INSERT, change it into INSERT after first
-			// DataSet so data is not deleted
-			boolean first = true;
-			for (IDataSet dataSet : phase.getDataSets(configuration)) {
-				if (!first && operation.equals(DatabaseOperation.CLEAN_INSERT)) {
-					operation = DatabaseOperation.INSERT;
-				}
-				operation.execute(databaseConnection, dataSet);
-				first = false;
-			}
+			operation.execute(databaseConnection, configuration.getDataSet());
 
 		} finally {
 			if (connection != null && !DataSourceUtils.isConnectionTransactional(connection, dataSource)) {

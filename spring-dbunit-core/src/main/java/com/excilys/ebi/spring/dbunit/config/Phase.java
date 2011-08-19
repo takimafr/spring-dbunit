@@ -15,11 +15,6 @@
  */
 package com.excilys.ebi.spring.dbunit.config;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 
 /**
@@ -32,11 +27,6 @@ public enum Phase {
 		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
 			return configuration.getSetUpOperation();
 		}
-
-		@Override
-		public List<IDataSet> getDataSets(DataSetConfiguration configuration) {
-			return configuration.getDataSets();
-		}
 	}
 
 	,
@@ -45,17 +35,7 @@ public enum Phase {
 		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
 			return configuration.getTearDownOperation();
 		}
-
-		@Override
-		public List<IDataSet> getDataSets(DataSetConfiguration configuration) {
-
-			List<IDataSet> dataSets = new ArrayList<IDataSet>(configuration.getDataSets());
-			Collections.reverse(dataSets);
-			return dataSets;
-		}
 	};
 
 	public abstract DatabaseOperation getOperation(DataSetConfiguration configuration);
-
-	public abstract List<IDataSet> getDataSets(DataSetConfiguration configuration);
 }
