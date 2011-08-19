@@ -116,7 +116,7 @@ public class ServletConfigurationProcessor {
 		List<String> locations = new ArrayList<String>();
 
 		if (StringUtils.hasLength(dataSetsInitParam)) {
-			for (String location : dataSetsInitParam.split(";")) {
+			for (String location : dataSetsInitParam.split(",")) {
 				locations.add(location.trim());
 			}
 
