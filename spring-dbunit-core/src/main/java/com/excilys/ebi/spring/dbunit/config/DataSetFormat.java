@@ -41,7 +41,9 @@ public enum DataSetFormat {
 		 * {@inheritDoc}
 		 */
 		public IDataSet fromInputStream(final InputStream in) throws DataSetException, IOException {
-			return new FlatXmlDataSetBuilder().build(in);
+			FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+			builder.setColumnSensing(true);
+			return builder.build(in);
 		}
 	},
 	/**
