@@ -30,9 +30,9 @@ import org.dbunit.dataset.IDataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.TestContext;
 import org.springframework.util.ObjectUtils;
 
@@ -54,7 +54,7 @@ public class TestConfigurationProcessor {
 
 	private final ConfigurationConventions conventions;
 
-	private final ResourceLoader resourceLoader = new DefaultResourceLoader();
+	private final ResourcePatternResolver resourceLoader = new PathMatchingResourcePatternResolver();
 
 	/**
 	 * A configuration cache used between setup and teardown
@@ -161,8 +161,10 @@ public class TestConfigurationProcessor {
 
 		for (String dataSetResourceLocation : dataSetResourceLocations) {
 			LOGGER.debug("Loading DataSet file '{}'", dataSetResourceLocation);
-			Resource dataSetResource = resourceLoader.getResource(dataSetResourceLocation);
-			dataSetResources.add(dataSetResource);
+			Resource[] resources = resourceLoader.getResources(dataSetResourceLocation);
+			for (Resource resource : resources) {
+				dataSetResources.add(resource);
+			}
 		}
 
 		return dataSetResources;

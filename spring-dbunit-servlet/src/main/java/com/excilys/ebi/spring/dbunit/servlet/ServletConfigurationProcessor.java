@@ -24,9 +24,9 @@ import javax.servlet.ServletContext;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.config.DBOp;
@@ -38,6 +38,8 @@ import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
 public class ServletConfigurationProcessor {
+
+	private String DATASETS_LOCATION_DELIMITERS = ",; \t\n";
 
 	public static final String SPRING_DBUNIT_INIT_PARAM_PREFIX = "spring.dbunit.";
 
@@ -65,7 +67,7 @@ public class ServletConfigurationProcessor {
 
 	public static final String DEFAULT_DATASOURCE_SPRING_NAME = null;
 
-	private ResourceLoader resourceLoader = new DefaultResourceLoader();
+	private ResourcePatternResolver resourceLoader = new PathMatchingResourcePatternResolver();
 
 	public DataSetConfiguration getConfiguration(ServletContext servletContext) throws IOException, DatabaseUnitException {
 
@@ -95,7 +97,7 @@ public class ServletConfigurationProcessor {
 			}
 		});
 
-		List<String> dataSetsLocations = getDataSetsLocations(servletContext);
+		String[] dataSetsLocations = getDataSetsLocations(servletContext);
 
 		List<IDataSet> dataSets = loadDataSets(dataSetsLocations, format);
 
@@ -111,27 +113,24 @@ public class ServletConfigurationProcessor {
 		return StringUtils.hasLength(initParam) ? function.apply(initParam.trim()) : defaultValue;
 	}
 
-	private List<String> getDataSetsLocations(ServletContext servletContext) {
+	private String[] getDataSetsLocations(ServletContext servletContext) {
 		String dataSetsInitParam = servletContext.getInitParameter(DATASETS_INIT_PARAM);
-		List<String> locations = new ArrayList<String>();
 
 		if (StringUtils.hasLength(dataSetsInitParam)) {
-			for (String location : dataSetsInitParam.split(",")) {
-				locations.add(location.trim());
-			}
+			return StringUtils.tokenizeToStringArray(dataSetsInitParam, DATASETS_LOCATION_DELIMITERS);
 
 		} else {
-			locations.add(DEFAULT_DATASET);
+			return new String[] { DEFAULT_DATASET };
 		}
-
-		return locations;
 	}
 
-	private List<IDataSet> loadDataSets(List<String> dataSetsLocations, DataSetFormat format) throws DataSetException, IOException {
-		List<IDataSet> dataSets = new ArrayList<IDataSet>(dataSetsLocations.size());
+	private List<IDataSet> loadDataSets(String[] dataSetsLocations, DataSetFormat format) throws DataSetException, IOException {
+		List<IDataSet> dataSets = new ArrayList<IDataSet>(dataSetsLocations.length);
 		for (String location : dataSetsLocations) {
-			Resource resource = resourceLoader.getResource(location);
-			dataSets.add(format.fromInputStream(resource.getInputStream()));
+			Resource[] resources = resourceLoader.getResources(location);
+			for (Resource resource : resources) {
+				dataSets.add(format.fromInputStream(resource.getInputStream()));
+			}
 		}
 		return dataSets;
 	}
