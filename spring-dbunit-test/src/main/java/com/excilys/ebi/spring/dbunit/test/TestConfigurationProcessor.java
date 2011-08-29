@@ -15,10 +15,12 @@
  */
 package com.excilys.ebi.spring.dbunit.test;
 
+import static com.excilys.ebi.spring.dbunit.config.DataSetConfiguration.newDataSetConfiguration;
+import static com.excilys.ebi.spring.dbunit.config.DataSetFormatOptions.newFormatOptions;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -26,19 +28,16 @@ import java.util.Map;
 
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.TestContext;
 import org.springframework.util.ObjectUtils;
 
-import com.excilys.ebi.spring.dbunit.config.DBOp;
+import com.excilys.ebi.spring.dbunit.config.DBOperation;
 import com.excilys.ebi.spring.dbunit.config.DBType;
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
 import com.excilys.ebi.spring.dbunit.test.conventions.ConfigurationConventions;
 import com.excilys.ebi.spring.dbunit.test.conventions.DefaultConfigurationConventions;
 
@@ -53,8 +52,6 @@ public class TestConfigurationProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestConfigurationProcessor.class);
 
 	private final ConfigurationConventions conventions;
-
-	private final ResourcePatternResolver resourceLoader = new PathMatchingResourcePatternResolver();
 
 	/**
 	 * A configuration cache used between setup and teardown
@@ -106,42 +103,28 @@ public class TestConfigurationProcessor {
 		return configuration;
 	}
 
-	private DataSetConfiguration buildConfiguration(DataSet dataSetAnnotation, TestContext testContext) throws DataSetException, IOException {
-		List<IDataSet> dataSets = buildDataSets(dataSetAnnotation, testContext);
-		String dataSourceSpringName = dataSetAnnotation.dataSourceSpringName();
-		DBOp setUpOp = dataSetAnnotation.setUpOperation();
-		DBOp tearDownOp = dataSetAnnotation.tearDownOperation();
-		DBType dbType = dataSetAnnotation.dbType();
+	private DataSetConfiguration buildConfiguration(DataSet annotation, TestContext testContext) throws DataSetException, IOException {
 
-		return new DataSetConfiguration(dataSets, dataSourceSpringName, setUpOp, tearDownOp, dbType);
-	}
+		String dataSourceSpringName = annotation.dataSourceSpringName();
+		DataSetFormat format = annotation.format();
+		DBOperation setUpOperation = annotation.setUpOperation();
+		DBOperation tearDownOperation = annotation.tearDownOperation();
+		DBType dbType = annotation.dbType();
+		boolean columnSensing = annotation.columnSensing();
+		boolean dtdMetadata = annotation.dtdMetadata();
+		boolean caseSensitiveTableNames = annotation.caseSensitiveTableNames();
+		String dtdLocation = annotation.dtdLocation();
+		List<String> dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
 
-	/**
-	 * Build a DataSet from the informations passed in the annotation
-	 * 
-	 * @param testContext
-	 *            the context
-	 * @return the datasets
-	 * @throws IOException
-	 *             I/O failure
-	 * @throws DatabaseUnitException
-	 *             DBUnit failure
-	 */
-	private List<IDataSet> buildDataSets(DataSet annotation, TestContext testContext) throws DataSetException, IOException {
-
-		String[] valueLocations = annotation.value();
-		String[] locations = annotation.locations();
-		if (!ObjectUtils.isEmpty(valueLocations)) {
-			locations = valueLocations;
-		}
-
-		List<Resource> dataSetResources = getResourcesByConventions(locations, testContext);
-		List<IDataSet> dataSets = new ArrayList<IDataSet>(dataSetResources.size());
-		for (Resource resource : dataSetResources) {
-			dataSets.add(annotation.format().fromInputStream(resource.getInputStream()));
-		}
-
-		return dataSets;
+		return newDataSetConfiguration().withFormat(format)/**/
+		.withFormatOptions(newFormatOptions()/**/
+		.withColumnSensing(columnSensing).withDtdLocation(dtdLocation).withDtdMetadata(dtdMetadata).withCaseSensitiveTableNames(caseSensitiveTableNames).build())/**/
+		.withSetUpOp(setUpOperation)/**/
+		.withTearDownOp(tearDownOperation)/**/
+		.withDbType(dbType)/**/
+		.withDataSourceSpringName(dataSourceSpringName)/**/
+		.withDataSetResourceLocations(dataSetResourceLocations)/**/
+		.build();
 	}
 
 	/**
@@ -153,21 +136,15 @@ public class TestConfigurationProcessor {
 	 * @throws IOException
 	 *             I/O failure
 	 */
-	private List<Resource> getResourcesByConventions(String[] locations, TestContext testContext) throws IOException {
+	private List<String> getResourceLocationsByConventions(DataSet annotation, TestContext testContext) throws IOException {
 
-		List<String> dataSetResourceLocations = conventions.getDataSetResourcesLocations(testContext.getTestClass(), locations);
-
-		List<Resource> dataSetResources = new ArrayList<Resource>(dataSetResourceLocations.size());
-
-		for (String dataSetResourceLocation : dataSetResourceLocations) {
-			LOGGER.debug("Loading DataSet file '{}'", dataSetResourceLocation);
-			Resource[] resources = resourceLoader.getResources(dataSetResourceLocation);
-			for (Resource resource : resources) {
-				dataSetResources.add(resource);
-			}
+		String[] valueLocations = annotation.value();
+		String[] locations = annotation.locations();
+		if (!ObjectUtils.isEmpty(valueLocations)) {
+			locations = valueLocations;
 		}
 
-		return dataSetResources;
+		return conventions.getDataSetResourcesLocations(testContext.getTestClass(), locations);
 	}
 
 	/**

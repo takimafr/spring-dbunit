@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 import org.dbunit.dataset.IDataSet;
 
-import com.excilys.ebi.spring.dbunit.config.DBOp;
+import com.excilys.ebi.spring.dbunit.config.DBOperation;
 import com.excilys.ebi.spring.dbunit.config.DBType;
 import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
 
@@ -51,17 +51,19 @@ public @interface DataSet {
 	String[] locations() default {};
 
 	/**
-	 * @return DBUnit operation on setup (default : {@link DBOp#CLEAN_INSERT})
+	 * @return DBUnit operation on setup (default :
+	 *         {@link DBOperation#CLEAN_INSERT})
 	 */
-	DBOp setUpOperation() default DBOp.CLEAN_INSERT;
+	DBOperation setUpOperation() default DBOperation.CLEAN_INSERT;
 
 	/**
-	 * @return DBUnit operation on teardown (default : {@link DBOp#NONE})
+	 * @return DBUnit operation on teardown (default : {@link DBOperation#NONE})
 	 */
-	DBOp tearDownOperation() default DBOp.NONE;
+	DBOperation tearDownOperation() default DBOperation.NONE;
 
 	/**
-	 * @return {@link IDataSet} file format (default : {@link DataSetFormat#FLAT})
+	 * @return {@link IDataSet} file format (default :
+	 *         {@link DataSetFormat#FLAT})
 	 */
 	DataSetFormat format() default DataSetFormat.FLAT;
 
@@ -75,4 +77,24 @@ public @interface DataSet {
 	 *         only one DataSource in the Spring Context.
 	 */
 	String dataSourceSpringName() default "";
+
+	/**
+	 * @return if column sensing should be used for FLAT XML format
+	 */
+	boolean columnSensing() default false;
+
+	/**
+	 * @return location of the DTD that shoud be used for FLAT XML format
+	 */
+	String dtdLocation() default "";
+
+	/**
+	 * @return if the xml file should be validated with the DTD specified
+	 */
+	boolean dtdMetadata() default false;
+
+	/**
+	 * @return if table names are case sensitive
+	 */
+	boolean caseSensitiveTableNames() default false;
 }

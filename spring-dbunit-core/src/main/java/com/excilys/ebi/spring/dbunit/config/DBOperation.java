@@ -21,7 +21,7 @@ import org.springframework.core.Constants;
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
-public enum DBOp {
+public enum DBOperation {
 
 	/** Nothing, @see {@link DatabaseOperation.#NONE} */
 	NONE,
