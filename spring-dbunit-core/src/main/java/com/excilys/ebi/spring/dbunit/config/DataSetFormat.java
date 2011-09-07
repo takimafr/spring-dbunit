@@ -34,10 +34,33 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.StringUtils;
 import org.xml.sax.InputSource;
 
+import com.excilys.ebi.spring.dbunit.dataset.xml.flyweight.FlyWeightFlatXmlDataSetBuilder;
+
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
 public enum DataSetFormat {
+
+	/**
+	 * @see {@link FlatXmlDataSet}.
+	 */
+	FLYWEIGHT_FLAT {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+			FlyWeightFlatXmlDataSetBuilder builder = new FlyWeightFlatXmlDataSetBuilder();
+			builder.setColumnSensing(options.isColumnSensing());
+			builder.setDtdMetadata(options.isDtdMetadata());
+			builder.setCaseSensitiveTableNames(options.isCaseSensitiveTableNames());
+			if (StringUtils.hasText(options.getDtdLocation())) {
+				IDataSet metaDataSet = FLAT_DTD.loadUnique(null, options.getDtdLocation());
+				builder.setMetaDataSet(metaDataSet);
+			}
+			return builder.build(resource.getInputStream());
+		}
+	},
 
 	/**
 	 * @see {@link FlatXmlDataSet}.
@@ -47,7 +70,7 @@ public enum DataSetFormat {
 		/**
 		 * {@inheritDoc}
 		 */
-		protected IDataSet fromInputStream(final InputStream in, DataSetFormatOptions options) throws DataSetException, IOException {
+		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
 			FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
 			builder.setColumnSensing(options.isColumnSensing());
 			builder.setDtdMetadata(options.isDtdMetadata());
@@ -56,7 +79,7 @@ public enum DataSetFormat {
 				IDataSet metaDataSet = FLAT_DTD.loadUnique(null, options.getDtdLocation());
 				builder.setMetaDataSet(metaDataSet);
 			}
-			return builder.build(in);
+			return builder.build(resource.getInputStream());
 		}
 	},
 	/**
@@ -67,8 +90,8 @@ public enum DataSetFormat {
 		/**
 		 * {@inheritDoc}
 		 */
-		protected IDataSet fromInputStream(final InputStream in, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new XmlDataSet(in);
+		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+			return new XmlDataSet(resource.getInputStream());
 		}
 	},
 	/**
@@ -79,16 +102,16 @@ public enum DataSetFormat {
 		/**
 		 * {@inheritDoc}
 		 */
-		protected IDataSet fromInputStream(final InputStream in, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new StreamingDataSet(new XmlProducer(new InputSource(in)));
+		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+			return new StreamingDataSet(new XmlProducer(new InputSource(resource.getInputStream())));
 		}
 	},
 
 	FLAT_DTD {
 
 		@Override
-		protected IDataSet fromInputStream(InputStream in, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new FlatDtdDataSet(in);
+		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+			return new FlatDtdDataSet(resource.getInputStream());
 		}
 	};
 
@@ -107,20 +130,20 @@ public enum DataSetFormat {
 	 * @throws IOException
 	 *             I/O failure
 	 */
-	protected abstract IDataSet fromInputStream(InputStream in, DataSetFormatOptions options) throws DataSetException, IOException;
+	protected abstract IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException;
 
 	public IDataSet loadUnique(DataSetFormatOptions options, String location) throws DataSetException, IOException {
 		Resource resource = RESOURCE_LOADER.getResource(location);
-		return fromInputStream(resource.getInputStream(), options);
+		return fromResource(resource, options);
 	}
 
-	public List<IDataSet> loadMultiple(DataSetFormatOptions options, List<String> locations) throws DataSetException, IOException {
+	public List<IDataSet> loadMultiple(DataSetFormatOptions options, String[] locations) throws DataSetException, IOException {
 
-		List<IDataSet> dataSets = new ArrayList<IDataSet>(locations.size());
+		List<IDataSet> dataSets = new ArrayList<IDataSet>(locations.length);
 		for (String location : locations) {
 			Resource[] resources = RESOURCE_LOADER.getResources(location);
 			for (Resource resource : resources) {
-				dataSets.add(fromInputStream(resource.getInputStream(), options));
+				dataSets.add(fromResource(resource, options));
 			}
 		}
 		return dataSets;
