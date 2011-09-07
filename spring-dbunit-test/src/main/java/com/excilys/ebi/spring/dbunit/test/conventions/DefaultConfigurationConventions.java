@@ -15,11 +15,7 @@
  */
 package com.excilys.ebi.spring.dbunit.test.conventions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.core.io.support.ResourcePatternUtils;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ResourceUtils;
@@ -50,17 +46,17 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 * @see #generateDefaultLocation
 	 * @see #modifyLocation
 	 */
-	public List<String> getDataSetResourcesLocations(Class<?> clazz, String[] locations) {
+	public String[] getDataSetResourcesLocations(Class<?> clazz, String[] locations) {
 
 		if (ObjectUtils.isEmpty(locations)) {
 			locations = new String[] { null };
 		}
 
-		List<String> resourceLocations = new ArrayList<String>(locations.length);
+		String[] resourceLocations = new String[locations.length];
 
-		for (String location : locations) {
-			String resourceLocation = !StringUtils.hasLength(location) ? getDefaultLocationByConventions(clazz) : getRealLocationByConventions(clazz, location);
-			resourceLocations.add(resourceLocation);
+		for (int i = 0; i < locations.length; i++) {
+			String resourceLocation = !StringUtils.hasLength(locations[i]) ? getDefaultLocationByConventions(clazz) : getRealLocationByConventions(clazz, locations[i]);
+			resourceLocations[i] = resourceLocation;
 		}
 
 		return resourceLocations;
@@ -118,7 +114,12 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 * @see #getResourceSuffix()
 	 */
 	private String getDefaultLocationByConventions(Class<?> clazz) {
-		Assert.notNull(clazz, "Class must not be null");
-		return ResourceUtils.CLASSPATH_URL_PREFIX + StringUtils.cleanPath(ClassUtils.classPackageAsResourcePath(clazz) + "/" + DEFAULT_RESOURCE_NAME);
+
+		StringBuilder builder = new StringBuilder();
+		builder.append(ResourceUtils.CLASSPATH_URL_PREFIX);
+		builder.append(StringUtils.cleanPath(ClassUtils.classPackageAsResourcePath(clazz)));
+		builder.append("/");
+		builder.append(DEFAULT_RESOURCE_NAME);
+		return builder.toString();
 	}
 }

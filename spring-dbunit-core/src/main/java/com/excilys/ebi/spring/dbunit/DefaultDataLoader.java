@@ -19,15 +19,16 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
+import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.datasource.DataSourceUtils;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.DatabaseConnectionConfigurer;
 import com.excilys.ebi.spring.dbunit.config.Phase;
 
 /**
@@ -35,11 +36,13 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
  */
 public class DefaultDataLoader implements DataLoader {
 
-	public void execute(ApplicationContext applicationContext, DataSetConfiguration configuration, Phase phase) throws Exception {
+	public void execute(ApplicationContext context, DataSetConfiguration dataSetConfiguration, Phase phase) throws Exception {
 
-		if (configuration != null) {
-			DataSource dataSource = lookUpDataSource(configuration, applicationContext);
-			executeOperation(phase.getOperation(configuration), configuration, dataSource, phase);
+		if (dataSetConfiguration != null) {
+			DataSource dataSource = lookUpDataSource(context, dataSetConfiguration);
+			DatabaseOperation operation = phase.getOperation(dataSetConfiguration);
+			IDataSet dataSet = dataSetConfiguration.getDataSet();
+			executeOperation(operation, dataSet, dataSetConfiguration, dataSource);
 		}
 	}
 
@@ -50,34 +53,24 @@ public class DefaultDataLoader implements DataLoader {
 	 *         specified in the configuration, use it, otherwise, expect one and
 	 *         only one DataSource in the ApplicationContext
 	 */
-	private DataSource lookUpDataSource(DataSetConfiguration configuration, ApplicationContext applicationContext) {
-
-		DataSource dataSource = null;
-
-		if (StringUtils.hasLength(configuration.getDataSourceSpringName())) {
-			dataSource = applicationContext.getBean(configuration.getDataSourceSpringName(), DataSource.class);
-
-		} else {
-			dataSource = applicationContext.getBean(DataSource.class);
-		}
-
-		Assert.notNull(dataSource, "Unable to find a DataSource");
-		return dataSource;
+	private DataSource lookUpDataSource(ApplicationContext applicationContext, DataSetConfiguration configuration) {
+		return configuration.getDataSourceSpringName() != null ? applicationContext.getBean(configuration.getDataSourceSpringName(), DataSource.class) : applicationContext
+				.getBean(DataSource.class);
 	}
 
 	/**
 	 * Execute a DBUbit operation
 	 */
-	private void executeOperation(DatabaseOperation operation, DataSetConfiguration configuration, DataSource dataSource, Phase phase) throws Exception {
+	private void executeOperation(DatabaseOperation operation, IDataSet dataSet, DatabaseConnectionConfigurer databaseConnectionConfigurer, DataSource dataSource) throws Exception {
 
 		Connection connection = null;
 
 		try {
 			connection = DataSourceUtils.getConnection(dataSource);
-			DatabaseConnection databaseConnection = new DatabaseConnection(connection);
-			databaseConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN, "\"?\"");
-			databaseConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, configuration.getDataTypeFactory());
-			operation.execute(databaseConnection, configuration.getDataSet());
+
+			DatabaseConnection databaseConnection = getDatabaseConnection(connection, databaseConnectionConfigurer);
+
+			operation.execute(databaseConnection, dataSet);
 
 		} finally {
 			if (connection != null && !DataSourceUtils.isConnectionTransactional(connection, dataSource)) {
@@ -86,5 +79,14 @@ public class DefaultDataLoader implements DataLoader {
 				DataSourceUtils.releaseConnection(connection, dataSource);
 			}
 		}
+	}
+
+	private DatabaseConnection getDatabaseConnection(Connection connection, DatabaseConnectionConfigurer databaseConnectionConfigurer) throws DatabaseUnitException {
+
+		DatabaseConnection databaseConnection = new DatabaseConnection(connection);
+		DatabaseConfig databaseConfig = databaseConnection.getConfig();
+		databaseConnectionConfigurer.configure(databaseConfig);
+
+		return databaseConnection;
 	}
 }

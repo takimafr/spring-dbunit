@@ -23,7 +23,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.dbunit.DatabaseUnitException;
@@ -33,18 +32,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.test.context.TestContext;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
-import com.excilys.ebi.spring.dbunit.config.DBOperation;
-import com.excilys.ebi.spring.dbunit.config.DBType;
+import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
-import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
 import com.excilys.ebi.spring.dbunit.test.conventions.ConfigurationConventions;
 import com.excilys.ebi.spring.dbunit.test.conventions.DefaultConfigurationConventions;
 
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
-public class TestConfigurationProcessor {
+public class TestConfigurationProcessor implements ConfigurationProcessor<TestContext> {
 
 	/**
 	 * The logger
@@ -105,24 +103,20 @@ public class TestConfigurationProcessor {
 
 	private DataSetConfiguration buildConfiguration(DataSet annotation, TestContext testContext) throws DataSetException, IOException {
 
-		String dataSourceSpringName = annotation.dataSourceSpringName();
-		DataSetFormat format = annotation.format();
-		DBOperation setUpOperation = annotation.setUpOperation();
-		DBOperation tearDownOperation = annotation.tearDownOperation();
-		DBType dbType = annotation.dbType();
-		boolean columnSensing = annotation.columnSensing();
-		boolean dtdMetadata = annotation.dtdMetadata();
-		boolean caseSensitiveTableNames = annotation.caseSensitiveTableNames();
-		String dtdLocation = annotation.dtdLocation();
-		List<String> dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
+		String[] dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
 
-		return newDataSetConfiguration().withFormat(format)/**/
-		.withFormatOptions(newFormatOptions()/**/
-		.withColumnSensing(columnSensing).withDtdLocation(dtdLocation).withDtdMetadata(dtdMetadata).withCaseSensitiveTableNames(caseSensitiveTableNames).build())/**/
-		.withSetUpOp(setUpOperation)/**/
-		.withTearDownOp(tearDownOperation)/**/
-		.withDbType(dbType)/**/
-		.withDataSourceSpringName(dataSourceSpringName)/**/
+		return newDataSetConfiguration()/**/
+		.withFormat(annotation.format())/**/
+		.withFormatOptions(newFormatOptions()//
+				.withColumnSensing(annotation.columnSensing())//
+				.withDtdLocation(StringUtils.hasText(annotation.dtdLocation()) ? annotation.dtdLocation() : null)//
+				.withDtdMetadata(annotation.dtdMetadata())//
+				.withCaseSensitiveTableNames(annotation.caseSensitiveTableNames())//
+				.build())/**/
+		.withSetUpOp(annotation.setUpOperation())/**/
+		.withTearDownOp(annotation.tearDownOperation())/**/
+		.withDbType(annotation.dbType())/**/
+		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
 		.withDataSetResourceLocations(dataSetResourceLocations)/**/
 		.build();
 	}
@@ -136,7 +130,7 @@ public class TestConfigurationProcessor {
 	 * @throws IOException
 	 *             I/O failure
 	 */
-	private List<String> getResourceLocationsByConventions(DataSet annotation, TestContext testContext) throws IOException {
+	private String[] getResourceLocationsByConventions(DataSet annotation, TestContext testContext) throws IOException {
 
 		String[] valueLocations = annotation.value();
 		String[] locations = annotation.locations();

@@ -22,8 +22,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.dataset.IDataSet;
 
+import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
 import com.excilys.ebi.spring.dbunit.config.DBOperation;
 import com.excilys.ebi.spring.dbunit.config.DBType;
 import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
@@ -51,24 +53,30 @@ public @interface DataSet {
 	String[] locations() default {};
 
 	/**
-	 * @return DBUnit operation on setup (default :
-	 *         {@link DBOperation#CLEAN_INSERT})
+	 * DBUnit operation on setup
+	 * 
+	 * @return default : {@link DBOperation#CLEAN_INSERT}
 	 */
 	DBOperation setUpOperation() default DBOperation.CLEAN_INSERT;
 
 	/**
-	 * @return DBUnit operation on teardown (default : {@link DBOperation#NONE})
+	 * DBUnit operation on teardown
+	 * 
+	 * @return (default @link DBOperation#NONE}
 	 */
 	DBOperation tearDownOperation() default DBOperation.NONE;
 
 	/**
-	 * @return {@link IDataSet} file format (default :
-	 *         {@link DataSetFormat#FLAT})
+	 * {@link IDataSet} file format
+	 * 
+	 * @return default {@link DataSetFormat#FLAT}
 	 */
 	DataSetFormat format() default DataSetFormat.FLAT;
 
 	/**
-	 * @return database type (default : {@link DBType#HSQLDB})
+	 * database type
+	 * 
+	 * @return default {@link DBType#HSQLDB}
 	 */
 	DBType dbType() default DBType.HSQLDB;
 
@@ -79,22 +87,71 @@ public @interface DataSet {
 	String dataSourceSpringName() default "";
 
 	/**
-	 * @return if column sensing should be used for FLAT XML format
+	 * @see com.excilys.ebi.spring.dbunit.dataset.xml.flyweight.FlyWeightFlatXmlDataSetBuilder#setColumnSensing(boolean)
+	 * @return default {@link ConfigurationDefaults.DEFAULT_COLUMN_SENSING}
 	 */
-	boolean columnSensing() default false;
+	boolean columnSensing() default ConfigurationDefaults.DEFAULT_COLUMN_SENSING;
 
 	/**
-	 * @return location of the DTD that shoud be used for FLAT XML format
+	 * @see com.excilys.ebi.spring.dbunit.dataset.xml.flyweight.FlyWeightFlatXmlDataSetBuilder#setMetaDataSet(IDataSet)
+	 * @return default empty
 	 */
 	String dtdLocation() default "";
 
 	/**
-	 * @return if the xml file should be validated with the DTD specified
+	 * @see com.excilys.ebi.spring.dbunit.dataset.xml.flyweight.FlyWeightFlatXmlDataSetBuilder#setDtdMetadata(boolean)
+	 * @return default {@link ConfigurationDefaults.DEFAULT_DTD_METADATA}
 	 */
-	boolean dtdMetadata() default false;
+	boolean dtdMetadata() default ConfigurationDefaults.DEFAULT_DTD_METADATA;
 
 	/**
-	 * @return if table names are case sensitive
+	 * @see DatabaseConfig#FEATURE_CASE_SENSITIVE_TABLE_NAMES
+	 * @return default
+	 *         {@link ConfigurationDefaults.DEFAULT_CASE_SENSITIVE_TABLE_NAMES}
 	 */
-	boolean caseSensitiveTableNames() default false;
+	boolean caseSensitiveTableNames() default ConfigurationDefaults.DEFAULT_CASE_SENSITIVE_TABLE_NAMES;
+
+	/**
+	 * @see DatabaseConfig#PROPERTY_ESCAPE_PATTERN
+	 * @return default {@link ConfigurationDefaults.DEFAULT_ESCAPE_PATTERN}
+	 */
+	String escapePattern() default ConfigurationDefaults.DEFAULT_ESCAPE_PATTERN;
+
+	/**
+	 * @see DatabaseConfig#PROPERTY_BATCH_SIZE
+	 * @return default {@link ConfigurationDefaults.DEFAULT_BATCH_SIZE}
+	 */
+	int batchSize() default ConfigurationDefaults.DEFAULT_BATCH_SIZE;
+
+	/**
+	 * @see DatabaseConfig#PROPERTY_FETCH_SIZE
+	 * @return default {@link ConfigurationDefaults.DEFAULT_FETCH_SIZE}
+	 */
+	int fetchSize() default ConfigurationDefaults.DEFAULT_FETCH_SIZE;
+
+	/**
+	 * @see DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES
+	 * @return default
+	 *         {@link ConfigurationDefaults.DEFAULT_QUALIFIED_TABLE_NAMES}
+	 */
+	boolean qualifiedTableNames() default ConfigurationDefaults.DEFAULT_QUALIFIED_TABLE_NAMES;
+
+	/**
+	 * @see DatabaseConfig#FEATURE_BATCHED_STATEMENTS
+	 * @return default {@link ConfigurationDefaults.DEFAULT_BATCHED_STATEMENTS}
+	 */
+	boolean batchedStatements() default ConfigurationDefaults.DEFAULT_BATCHED_STATEMENTS;
+
+	/**
+	 * @see DatabaseConfig#FEATURE_SKIP_ORACLE_RECYCLEBIN_TABLES
+	 * @return default
+	 *         {@link ConfigurationDefaults.DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES}
+	 */
+	boolean skipOracleRecycleBinTables() default ConfigurationDefaults.DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES;
+
+	/**
+	 * @see DatabaseConfig#PROPERTY_TABLE_TYPE
+	 * @return default {@link ConfigurationDefaults.DEFAULT_TABLE_TYPE}
+	 */
+	String[] tableType() default { "TABLE" };
 }

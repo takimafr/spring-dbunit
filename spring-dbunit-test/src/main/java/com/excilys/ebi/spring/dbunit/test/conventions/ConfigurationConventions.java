@@ -1,12 +1,12 @@
 /*
  * Copyright 2010-2011 eBusiness Information, Groupe Excilys (www.excilys.com)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,8 +14,6 @@
  * the License.
  */
 package com.excilys.ebi.spring.dbunit.test.conventions;
-
-import java.util.List;
 
 /**
  * Configuration conventions
@@ -31,5 +29,5 @@ public interface ConfigurationConventions {
 	 *            the locations parameter as specified in the DataSet annotation
 	 * @return the corresponding resource locations
 	 */
-	List<String> getDataSetResourcesLocations(Class<?> clazz, String[] locations);
+	String[] getDataSetResourcesLocations(Class<?> clazz, String[] locations);
 }

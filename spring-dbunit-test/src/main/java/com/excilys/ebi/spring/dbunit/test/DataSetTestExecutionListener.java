@@ -18,6 +18,7 @@ package com.excilys.ebi.spring.dbunit.test;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
+import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
 import com.excilys.ebi.spring.dbunit.DataLoader;
 import com.excilys.ebi.spring.dbunit.DefaultDataLoader;
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
@@ -37,16 +38,17 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
  */
 public class DataSetTestExecutionListener extends AbstractTestExecutionListener {
 
-	private TestConfigurationProcessor configurationProcessor = new TestConfigurationProcessor();
-
 	private DataLoader dataLoader = new DefaultDataLoader();
+	private ConfigurationProcessor<TestContext> configurationProcessor = new TestConfigurationProcessor();
+	private DataSetConfiguration configuration;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void beforeTestMethod(TestContext testContext) throws Exception {
-		doWithDataSet(testContext, Phase.SETUP);
+		configuration = configurationProcessor.getConfiguration(testContext);
+		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.SETUP);
 	}
 
 	/**
@@ -54,11 +56,6 @@ public class DataSetTestExecutionListener extends AbstractTestExecutionListener 
 	 */
 	@Override
 	public void afterTestMethod(TestContext testContext) throws Exception {
-		doWithDataSet(testContext, Phase.TEARDOWN);
-	}
-
-	private void doWithDataSet(TestContext testContext, Phase phase) throws Exception {
-		DataSetConfiguration configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.execute(testContext.getApplicationContext(), configuration, phase);
+		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.TEARDOWN);
 	}
 }

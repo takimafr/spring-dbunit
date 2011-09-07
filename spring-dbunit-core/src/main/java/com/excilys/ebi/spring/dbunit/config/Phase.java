@@ -25,7 +25,7 @@ public enum Phase {
 	SETUP {
 		@Override
 		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
-			return configuration.getSetUpOperation();
+			return configuration.getSetUpOperation().getDatabaseOperation();
 		}
 	}
 
@@ -33,7 +33,7 @@ public enum Phase {
 	TEARDOWN {
 		@Override
 		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
-			return configuration.getTearDownOperation();
+			return configuration.getTearDownOperation().getDatabaseOperation();
 		}
 	};
 

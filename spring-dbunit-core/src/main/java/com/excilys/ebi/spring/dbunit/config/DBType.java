@@ -15,14 +15,19 @@
  */
 package com.excilys.ebi.spring.dbunit.config;
 
+import org.dbunit.database.DefaultMetadataHandler;
+import org.dbunit.database.IMetadataHandler;
 import org.dbunit.dataset.datatype.IDataTypeFactory;
 import org.dbunit.ext.db2.Db2DataTypeFactory;
+import org.dbunit.ext.db2.Db2MetadataHandler;
 import org.dbunit.ext.h2.H2DataTypeFactory;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.dbunit.ext.mckoi.MckoiDataTypeFactory;
 import org.dbunit.ext.mssql.MsSqlDataTypeFactory;
 import org.dbunit.ext.mysql.MySqlDataTypeFactory;
+import org.dbunit.ext.mysql.MySqlMetadataHandler;
 import org.dbunit.ext.netezza.NetezzaDataTypeFactory;
+import org.dbunit.ext.netezza.NetezzaMetadataHandler;
 import org.dbunit.ext.oracle.Oracle10DataTypeFactory;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
@@ -32,36 +37,52 @@ import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
  */
 public enum DBType {
 
-	DB2(Db2DataTypeFactory.class), /**/
-	HSQLDB(HsqldbDataTypeFactory.class), /**/
-	H2(H2DataTypeFactory.class), /**/
-	MCKOY(MckoiDataTypeFactory.class), /**/
-	MSSQL(MsSqlDataTypeFactory.class), /**/
-	MYSQL(MySqlDataTypeFactory.class), /**/
-	NETEZZA(NetezzaDataTypeFactory.class), /**/
-	ORACLE(OracleDataTypeFactory.class), /**/
-	ORACLE10(Oracle10DataTypeFactory.class), /**/
-	POSTGRESQL(PostgresqlDataTypeFactory.class);
+	DB2(Db2DataTypeFactory.class, Db2MetadataHandler.class), /**/
+	HSQLDB(HsqldbDataTypeFactory.class, DefaultMetadataHandler.class), /**/
+	H2(H2DataTypeFactory.class, DefaultMetadataHandler.class), /**/
+	MCKOY(MckoiDataTypeFactory.class, DefaultMetadataHandler.class), /**/
+	MSSQL(MsSqlDataTypeFactory.class, DefaultMetadataHandler.class), /**/
+	MYSQL(MySqlDataTypeFactory.class, MySqlMetadataHandler.class), /**/
+	NETEZZA(NetezzaDataTypeFactory.class, NetezzaMetadataHandler.class), /**/
+	ORACLE(OracleDataTypeFactory.class, DefaultMetadataHandler.class), /**/
+	ORACLE10(Oracle10DataTypeFactory.class, DefaultMetadataHandler.class), /**/
+	POSTGRESQL(PostgresqlDataTypeFactory.class, DefaultMetadataHandler.class);
 
 	private final Class<? extends IDataTypeFactory> dataTypeFactoryClass;
+	private final Class<? extends IMetadataHandler> metadataHandlerClass;
 
 	private IDataTypeFactory dataTypeFactory;
 
-	private DBType(Class<? extends IDataTypeFactory> dataTypeFactoryClass) {
+	private IMetadataHandler metadataHandler;
+
+	private DBType(Class<? extends IDataTypeFactory> dataTypeFactoryClass, Class<? extends IMetadataHandler> metadataHandlerClass) {
 		this.dataTypeFactoryClass = dataTypeFactoryClass;
+		this.metadataHandlerClass = metadataHandlerClass;
 	}
 
 	IDataTypeFactory getDataTypeFactory() {
 
 		// doesn't really matter if it's not synchronized...
 		if (dataTypeFactory == null) {
-			try {
-				dataTypeFactory = dataTypeFactoryClass.newInstance();
-			} catch (Exception e) {
-				throw new ExceptionInInitializerError(e);
-			}
+			dataTypeFactory = getInstance(dataTypeFactoryClass);
 		}
-
 		return dataTypeFactory;
+	}
+
+	IMetadataHandler getMetadataHandler() {
+
+		// doesn't really matter if it's not synchronized...
+		if (metadataHandler == null) {
+			metadataHandler = getInstance(metadataHandlerClass);
+		}
+		return metadataHandler;
+	}
+
+	private <T> T getInstance(Class<T> clazz) {
+		try {
+			return clazz.newInstance();
+		} catch (Exception e) {
+			throw new ExceptionInInitializerError(e);
+		}
 	}
 }

@@ -1,30 +1,13 @@
 package com.excilys.ebi.spring.dbunit.config;
 
+import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
+
 public class DataSetFormatOptions {
 
-	private boolean columnSensing;
-	private String dtdLocation;
-	private boolean dtdMetadata;
-	private boolean caseSensitiveTableNames;
-
-	private DataSetFormatOptions() {
-	}
-
-	public boolean isColumnSensing() {
-		return columnSensing;
-	}
-
-	public String getDtdLocation() {
-		return dtdLocation;
-	}
-
-	public boolean isDtdMetadata() {
-		return dtdMetadata;
-	}
-
-	public boolean isCaseSensitiveTableNames() {
-		return caseSensitiveTableNames;
-	}
+	private boolean columnSensing = ConfigurationDefaults.DEFAULT_COLUMN_SENSING;
+	private String dtdLocation = ConfigurationDefaults.DEFAULT_DTD_LOCATION;
+	private boolean dtdMetadata = ConfigurationDefaults.DEFAULT_DTD_METADATA;
+	private boolean caseSensitiveTableNames = ConfigurationDefaults.DEFAULT_CASE_SENSITIVE_TABLE_NAMES;
 
 	public static DataSetFormatOptions.Builder newFormatOptions() {
 		return new Builder();
@@ -60,5 +43,37 @@ public class DataSetFormatOptions {
 		public DataSetFormatOptions build() {
 			return options;
 		}
+	}
+
+	public boolean isColumnSensing() {
+		return columnSensing;
+	}
+
+	public String getDtdLocation() {
+		return dtdLocation;
+	}
+
+	public boolean isDtdMetadata() {
+		return dtdMetadata;
+	}
+
+	public boolean isCaseSensitiveTableNames() {
+		return caseSensitiveTableNames;
+	}
+
+	public void setColumnSensing(boolean columnSensing) {
+		this.columnSensing = columnSensing;
+	}
+
+	public void setDtdLocation(String dtdLocation) {
+		this.dtdLocation = dtdLocation;
+	}
+
+	public void setDtdMetadata(boolean dtdMetadata) {
+		this.dtdMetadata = dtdMetadata;
+	}
+
+	public void setCaseSensitiveTableNames(boolean caseSensitiveTableNames) {
+		this.caseSensitiveTableNames = caseSensitiveTableNames;
 	}
 }
