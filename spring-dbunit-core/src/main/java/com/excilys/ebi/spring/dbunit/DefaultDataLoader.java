@@ -19,11 +19,6 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.DatabaseConfig;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.operation.DatabaseOperation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
@@ -39,10 +34,11 @@ public class DefaultDataLoader implements DataLoader {
 	public void execute(ApplicationContext context, DataSetConfiguration dataSetConfiguration, Phase phase) throws Exception {
 
 		if (dataSetConfiguration != null) {
+			DbUnitDatabasePopulator populator = new DbUnitDatabasePopulator();
+			populator.setDataSetConfiguration(dataSetConfiguration);
+			populator.setPhase(phase);
 			DataSource dataSource = lookUpDataSource(context, dataSetConfiguration);
-			DatabaseOperation operation = phase.getOperation(dataSetConfiguration);
-			IDataSet dataSet = dataSetConfiguration.getDataSet();
-			executeOperation(operation, dataSet, dataSetConfiguration, dataSource);
+			executeOperation(populator, dataSetConfiguration, dataSource);
 		}
 	}
 
@@ -61,16 +57,13 @@ public class DefaultDataLoader implements DataLoader {
 	/**
 	 * Execute a DBUbit operation
 	 */
-	private void executeOperation(DatabaseOperation operation, IDataSet dataSet, DatabaseConnectionConfigurer databaseConnectionConfigurer, DataSource dataSource) throws Exception {
+	private void executeOperation(DbUnitDatabasePopulator populator, DatabaseConnectionConfigurer databaseConnectionConfigurer, DataSource dataSource) throws Exception {
 
 		Connection connection = null;
 
 		try {
 			connection = DataSourceUtils.getConnection(dataSource);
-
-			DatabaseConnection databaseConnection = getDatabaseConnection(connection, databaseConnectionConfigurer);
-
-			operation.execute(databaseConnection, dataSet);
+			populator.populate(connection);
 
 		} finally {
 			if (connection != null && !DataSourceUtils.isConnectionTransactional(connection, dataSource)) {
@@ -79,14 +72,5 @@ public class DefaultDataLoader implements DataLoader {
 				DataSourceUtils.releaseConnection(connection, dataSource);
 			}
 		}
-	}
-
-	private DatabaseConnection getDatabaseConnection(Connection connection, DatabaseConnectionConfigurer databaseConnectionConfigurer) throws DatabaseUnitException {
-
-		DatabaseConnection databaseConnection = new DatabaseConnection(connection);
-		DatabaseConfig databaseConfig = databaseConnection.getConfig();
-		databaseConnectionConfigurer.configure(databaseConfig);
-
-		return databaseConnection;
 	}
 }

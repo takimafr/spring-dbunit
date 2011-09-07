@@ -50,8 +50,8 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 	private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
 
 	public IDataSet getDataSet() throws DataSetException, IOException {
-		List<IDataSet> dataSets = format.loadMultiple(formatOptions, dataSetResourceLocations);
 
+		List<IDataSet> dataSets = format.loadMultiple(formatOptions, dataSetResourceLocations);
 		return dataSets.size() == 1 ? dataSets.get(0) : new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
 	}
 
