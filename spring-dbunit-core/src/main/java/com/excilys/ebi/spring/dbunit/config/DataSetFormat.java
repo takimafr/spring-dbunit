@@ -34,6 +34,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.StringUtils;
 import org.xml.sax.InputSource;
 
+import com.excilys.ebi.spring.dbunit.dataset.xml.LinkedHashMapFlatDtdProducer;
 import com.excilys.ebi.spring.dbunit.dataset.xml.flyweight.FlyWeightFlatXmlDataSetBuilder;
 
 /**
@@ -111,7 +112,7 @@ public enum DataSetFormat {
 
 		@Override
 		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new FlatDtdDataSet(resource.getInputStream());
+			return new FlatDtdDataSet(new LinkedHashMapFlatDtdProducer(new InputSource(resource.getInputStream())));
 		}
 	};
 

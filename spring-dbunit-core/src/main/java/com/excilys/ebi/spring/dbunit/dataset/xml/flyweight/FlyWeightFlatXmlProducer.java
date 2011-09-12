@@ -42,7 +42,6 @@ import org.dbunit.dataset.stream.DefaultConsumer;
 import org.dbunit.dataset.stream.IDataSetConsumer;
 import org.dbunit.dataset.stream.IDataSetProducer;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
-import org.dbunit.dataset.xml.FlatDtdProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -54,6 +53,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.excilys.ebi.spring.dbunit.dataset.xml.LinkedHashMapFlatDtdProducer;
+
 /**
  * Fork of org.dbunit.dataset.xml.FlatXmlProducer that use a cache for attribute
  * names and values in order to reduce memory footprint. Only useful if lots of
@@ -61,12 +62,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * https://sourceforge.net/tracker/?func=detail&aid=3405335&group_id
  * =47439&atid=449494
  * 
- * @author Manuel Laflamme
- * @author Last changed by: $Author: gommma $
- * @author stephanelandelle
- * @version $Revision: 1048 $ $Date: 2009-09-26 18:21:40 +0200 (sab, 26 set
- *          2009) $
- * @since 1.5 (Apr 18, 2003)
+ * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
 public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSetProducer, ContentHandler {
 
@@ -419,6 +415,15 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 			if (activeMetaData == null && qName.equals(DATASET)) {
 				_consumer.startDataSet();
 				_orderedTableNameMap = new OrderedTableNameMap(_caseSensitiveTableNames);
+
+				// SLAN register tables in the metadataset order
+				if (_metaDataSet != null) {
+					for (String tableName : _metaDataSet.getTableNames()) {
+						_consumer.startTable(_metaDataSet.getTableMetaData(tableName));
+						_consumer.endTable();
+					}
+				}
+
 				return;
 			}
 
@@ -446,8 +451,8 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 
 			// Row notification
 			if (attributes.getLength() > 0) {
-				// If we do not have a DTD
-				if (_dtdHandler == null || !_dtdHandler.isDtdPresent()) {
+				// If we do not have a _metaDataSet or DTD
+				if (_metaDataSet == null && (_dtdHandler == null || !_dtdHandler.isDtdPresent())) {
 					handleMissingColumns(attributes);
 					// Since a new MetaData object was created assign it to the
 					// local variable
@@ -489,7 +494,7 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 		}
 	}
 
-	private static class FlatDtdHandler extends FlatDtdProducer {
+	private static class FlatDtdHandler extends LinkedHashMapFlatDtdProducer {
 		/**
 		 * Logger for this class
 		 */
