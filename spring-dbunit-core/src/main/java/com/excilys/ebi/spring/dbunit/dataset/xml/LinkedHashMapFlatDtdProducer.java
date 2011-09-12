@@ -1,5 +1,9 @@
 package com.excilys.ebi.spring.dbunit.dataset.xml;
 
+import static org.springframework.util.ReflectionUtils.findField;
+import static org.springframework.util.ReflectionUtils.makeAccessible;
+import static org.springframework.util.ReflectionUtils.setField;
+
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -7,7 +11,6 @@ import java.util.List;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.stream.IDataSetProducer;
 import org.dbunit.dataset.xml.FlatDtdProducer;
-import org.springframework.util.ReflectionUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.ext.DeclHandler;
@@ -31,7 +34,8 @@ public class LinkedHashMapFlatDtdProducer extends FlatDtdProducer implements IDa
 	}
 
 	private void useLinkedHashMap() {
-		Field _columnListMapField = ReflectionUtils.findField(FlatDtdProducer.class, "_columnListMap");
-		ReflectionUtils.setField(_columnListMapField, this, new LinkedHashMap<String, List<Column>>());
+		Field _columnListMapField = findField(FlatDtdProducer.class, "_columnListMap");
+		makeAccessible(_columnListMapField);
+		setField(_columnListMapField, this, new LinkedHashMap<String, List<Column>>());
 	}
 }
