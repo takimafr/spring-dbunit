@@ -44,7 +44,7 @@
 		<java.version>1.5</java.version>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
 
-		<spring.version>3.0.6.RELEASE</spring.version>
+		<spring.version>3.1.0.RELEASE</spring.version>
 		<junit.version>4.10</junit.version>
 		<dbunit.version>2.4.8</dbunit.version>
 		<hsqldb.version>2.2.6</hsqldb.version>
