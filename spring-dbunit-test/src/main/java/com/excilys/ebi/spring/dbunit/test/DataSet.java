@@ -57,14 +57,14 @@ public @interface DataSet {
 	 * 
 	 * @return default : {@link DBOperation#CLEAN_INSERT}
 	 */
-	DBOperation setUpOperation() default DBOperation.CLEAN_INSERT;
+	DBOperation[] setUpOperation() default DBOperation.CLEAN_INSERT;
 
 	/**
 	 * DBUnit operation on teardown
 	 * 
 	 * @return (default @link DBOperation#NONE}
 	 */
-	DBOperation tearDownOperation() default DBOperation.NONE;
+	DBOperation[] tearDownOperation() default DBOperation.NONE;
 
 	/**
 	 * {@link IDataSet} file format

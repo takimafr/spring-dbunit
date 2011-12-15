@@ -15,6 +15,7 @@
  */
 package com.excilys.ebi.spring.dbunit.config;
 
+import org.dbunit.operation.CompositeOperation;
 import org.dbunit.operation.DatabaseOperation;
 
 /**
@@ -25,7 +26,15 @@ public enum Phase {
 	SETUP {
 		@Override
 		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
-			return configuration.getSetUpOperation().getDatabaseOperation();
+			if (configuration.getSetUpOperation().length == 1) {
+				return configuration.getSetUpOperation()[0].getDatabaseOperation();
+			} else {
+				DatabaseOperation[] databaseOperations = new DatabaseOperation[configuration.getSetUpOperation().length];
+				for (int i = 0; i < configuration.getSetUpOperation().length; i++) {
+					databaseOperations[i] = configuration.getSetUpOperation()[i].getDatabaseOperation();
+				}
+				return new CompositeOperation(databaseOperations);
+			}
 		}
 	}
 
@@ -33,7 +42,15 @@ public enum Phase {
 	TEARDOWN {
 		@Override
 		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
-			return configuration.getTearDownOperation().getDatabaseOperation();
+			if (configuration.getTearDownOperation().length == 1) {
+				return configuration.getTearDownOperation()[0].getDatabaseOperation();
+			} else {
+				DatabaseOperation[] databaseOperations = new DatabaseOperation[configuration.getTearDownOperation().length];
+				for (int i = 0; i < configuration.getTearDownOperation().length; i++) {
+					databaseOperations[i] = configuration.getTearDownOperation()[i].getDatabaseOperation();
+				}
+				return new CompositeOperation(databaseOperations);
+			}
 		}
 	};
 

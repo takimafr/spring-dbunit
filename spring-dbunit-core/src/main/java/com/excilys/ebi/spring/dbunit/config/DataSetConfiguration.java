@@ -35,8 +35,8 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 
 	private boolean disabled;
 	private String dataSourceSpringName;
-	private DBOperation setUpOperation = ConfigurationDefaults.DEFAULT_SETUP_OPERATION;
-	private DBOperation tearDownOperation = ConfigurationDefaults.DEFAULT_TEARDOWN_OPERATION;
+	private DBOperation setUpOperation[] = new DBOperation[] { ConfigurationDefaults.DEFAULT_SETUP_OPERATION };
+	private DBOperation tearDownOperation[] = new DBOperation[] { ConfigurationDefaults.DEFAULT_TEARDOWN_OPERATION };
 	private DBType dbType = ConfigurationDefaults.DEFAULT_DB_TYPE;
 	private String[] dataSetResourceLocations = new String[] { "classpath:dataSet.xml" };
 	private DataSetFormat format = ConfigurationDefaults.DEFAULT_DB_FORMAT;
@@ -93,12 +93,12 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 			return this;
 		}
 
-		public Builder withSetUpOp(DBOperation setUpOp) {
+		public Builder withSetUpOp(DBOperation[] setUpOp) {
 			dataSetConfiguration.setUpOperation = setUpOp;
 			return this;
 		}
 
-		public Builder withTearDownOp(DBOperation tearDownOp) {
+		public Builder withTearDownOp(DBOperation[] tearDownOp) {
 			dataSetConfiguration.tearDownOperation = tearDownOp;
 			return this;
 		}
@@ -186,11 +186,11 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 		return dataSourceSpringName;
 	}
 
-	public DBOperation getSetUpOperation() {
+	public DBOperation[] getSetUpOperation() {
 		return setUpOperation;
 	}
 
-	public DBOperation getTearDownOperation() {
+	public DBOperation[] getTearDownOperation() {
 		return tearDownOperation;
 	}
 
@@ -242,11 +242,11 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 		this.dataSourceSpringName = dataSourceSpringName;
 	}
 
-	public void setSetUpOperation(DBOperation setUpOperation) {
+	public void setSetUpOperation(DBOperation[] setUpOperation) {
 		this.setUpOperation = setUpOperation;
 	}
 
-	public void setTearDownOperation(DBOperation tearDownOperation) {
+	public void setTearDownOperation(DBOperation[] tearDownOperation) {
 		this.tearDownOperation = tearDownOperation;
 	}
 
