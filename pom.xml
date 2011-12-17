@@ -37,11 +37,6 @@
 			<id>excilys-thirdparty</id>
 			<url>http://repository.excilys.com/content/repositories/thirdparty</url>
 		</repository>
-		<repository>
-			<!-- required as long as jandex is not in central -->
-			<id>jboss</id>
-			<url>https://repository.jboss.org/nexus/content/groups/public</url>
-		</repository>
 	</repositories>
 
 	<properties>
