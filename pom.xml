@@ -47,7 +47,7 @@
 		<junit.version>4.10</junit.version>
 		<dbunit.version>2.4.8</dbunit.version>
 		<hsqldb.version>2.2.6</hsqldb.version>
-		<h2.version>1.3.162</h2.version>
+		<h2.version>1.3.163</h2.version>
 		<hibernate.version>3.6.9.Final</hibernate.version>
 		<javassist.version>3.15.0-GA</javassist.version>
 		<antlr.version>2.7.7</antlr.version>
