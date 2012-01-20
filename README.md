@@ -22,3 +22,7 @@ Have a look at the Wiki for modules documentation :
 ## Where are the binaries?
 
 See [Maven](/excilys/spring-dbunit/wiki/maven) Wiki page.
+
+## Release Notes
+See [Milestones](https://github.com/excilys/spring-dbunit/issues/milestones?state=closed)
+
