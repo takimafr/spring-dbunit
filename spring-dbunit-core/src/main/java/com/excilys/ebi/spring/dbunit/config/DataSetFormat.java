@@ -108,19 +108,25 @@ public enum DataSetFormat {
 			return new StreamingDataSet(new XmlProducer(new InputSource(resource.getInputStream())));
 		}
 	},
-
+	/**
+	 * @see {@link FlatDtdDataSet}.
+	 */
 	FLAT_DTD {
 
 		@Override
 		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
 			return new FlatDtdDataSet(new LinkedHashMapFlatDtdProducer(new InputSource(resource.getInputStream())));
 		}
-	}, CSV{
-        @Override
-        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-            return new CsvDataSet(resource.getFile());
-        }
-    };
+	},
+	/**
+	 * @see {@link CsvDataSet}.
+	 */
+	CSV {
+		@Override
+		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+			return new CsvDataSet(resource.getFile());
+		}
+	};
 
 	private static final ResourcePatternResolver RESOURCE_LOADER = new PathMatchingResourcePatternResolver();
 

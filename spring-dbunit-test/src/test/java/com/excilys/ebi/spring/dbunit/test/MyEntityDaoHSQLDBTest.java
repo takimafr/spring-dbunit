@@ -104,11 +104,11 @@ public class MyEntityDaoHSQLDBTest {
 		assertEquals("id1", entity.getId());
 	}
 
-    @Test
-    @DataSet(format = DataSetFormat.CSV, locations = {"dataSet3"})
-    public void  testLoadAllCsv() {
-        List<MyEntity> entities = myEntityDao.loadAll();
-        assertEquals(2, entities.size());
-    }
+	@Test
+	@DataSet(format = DataSetFormat.CSV, locations = { "dataSet3" })
+	public void testLoadAllCsv() {
+		List<MyEntity> entities = myEntityDao.loadAll();
+		assertEquals(2, entities.size());
+	}
 
 }
