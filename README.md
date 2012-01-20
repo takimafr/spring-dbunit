@@ -1,4 +1,4 @@
-# spring-dbunit 1.1.3
+# spring-dbunit 1.1.4
 
 ## What for?
 
