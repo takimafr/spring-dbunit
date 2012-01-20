@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.stream.StreamingDataSet;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
@@ -114,7 +115,12 @@ public enum DataSetFormat {
 		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
 			return new FlatDtdDataSet(new LinkedHashMapFlatDtdProducer(new InputSource(resource.getInputStream())));
 		}
-	};
+	}, CSV{
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+            return new CsvDataSet(resource.getFile());
+        }
+    };
 
 	private static final ResourcePatternResolver RESOURCE_LOADER = new PathMatchingResourcePatternResolver();
 

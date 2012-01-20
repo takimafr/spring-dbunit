@@ -21,6 +21,7 @@ import static junit.framework.Assert.assertNull;
 
 import java.util.List;
 
+import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +103,12 @@ public class MyEntityDaoHSQLDBTest {
 		assertNotNull("entity with name=name1 not found", entity);
 		assertEquals("id1", entity.getId());
 	}
+
+    @Test
+    @DataSet(format = DataSetFormat.CSV, locations = {"dataSet3"})
+    public void  testLoadAllCsv() {
+        List<MyEntity> entities = myEntityDao.loadAll();
+        assertEquals(2, entities.size());
+    }
 
 }
