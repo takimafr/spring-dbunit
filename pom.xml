@@ -194,6 +194,8 @@
 						<header>src/etc/header.txt</header>
 						<excludes>
 							<exclude>**/logback-test.xml</exclude>
+                            <exclude>**/table-ordering.txt</exclude>
+                            <exclude>**/*.csv</exclude>
 						</excludes>
 					</configuration>
 					<executions>
