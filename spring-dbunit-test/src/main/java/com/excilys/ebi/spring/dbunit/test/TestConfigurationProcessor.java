@@ -118,6 +118,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		.withDbType(annotation.dbType())/**/
 		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
 		.withDataSetResourceLocations(dataSetResourceLocations)/**/
+		.withEscapePattern(annotation.escapePattern())
 		.build();
 	}
 
