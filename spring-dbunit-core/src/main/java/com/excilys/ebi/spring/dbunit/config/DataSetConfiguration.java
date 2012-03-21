@@ -15,6 +15,8 @@
  */
 package com.excilys.ebi.spring.dbunit.config;
 
+import static org.springframework.util.StringUtils.tokenizeToStringArray;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -24,7 +26,6 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
 
@@ -40,7 +41,7 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 	private DBType dbType = ConfigurationDefaults.DEFAULT_DB_TYPE;
 	private String[] dataSetResourceLocations = new String[] { "classpath:dataSet.xml" };
 	private DataSetFormat format = ConfigurationDefaults.DEFAULT_DB_FORMAT;
-	private DataSetFormatOptions formatOptions;
+	private DataSetFormatOptions formatOptions = new DataSetFormatOptions();
 	private String escapePattern = ConfigurationDefaults.DEFAULT_ESCAPE_PATTERN;
 	private int batchSize = ConfigurationDefaults.DEFAULT_BATCH_SIZE;
 	private int fetchSize = ConfigurationDefaults.DEFAULT_FETCH_SIZE;
@@ -64,8 +65,7 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 		databaseConfig.setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN, escapePattern);
 		databaseConfig.setProperty(DatabaseConfig.PROPERTY_BATCH_SIZE, batchSize);
 		databaseConfig.setProperty(DatabaseConfig.PROPERTY_FETCH_SIZE, fetchSize);
-		if (formatOptions != null)
-			databaseConfig.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, formatOptions.isCaseSensitiveTableNames());
+		databaseConfig.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, formatOptions.isCaseSensitiveTableNames());
 		databaseConfig.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
 		databaseConfig.setProperty(DatabaseConfig.FEATURE_BATCHED_STATEMENTS, batchedStatements);
 		databaseConfig.setProperty(DatabaseConfig.FEATURE_SKIP_ORACLE_RECYCLEBIN_TABLES, skipOracleRecycleBinTables);
@@ -165,6 +165,7 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 			Assert.notNull(dataSetConfiguration.tearDownOperation, "tearDownOperation is required");
 			Assert.notNull(dataSetConfiguration.dbType, "dbType is required");
 			Assert.notNull(dataSetConfiguration.format, "format is required");
+			Assert.notNull(dataSetConfiguration.formatOptions, "formatOptions are required");
 
 			return dataSetConfiguration;
 		}
@@ -175,7 +176,7 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 	}
 
 	public void setDataSetResourceLocation(String dataSetResourceLocation) {
-		this.dataSetResourceLocations = StringUtils.tokenizeToStringArray(dataSetResourceLocation, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+		this.dataSetResourceLocations = tokenizeToStringArray(dataSetResourceLocation, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 	}
 
 	public boolean isDisabled() {
