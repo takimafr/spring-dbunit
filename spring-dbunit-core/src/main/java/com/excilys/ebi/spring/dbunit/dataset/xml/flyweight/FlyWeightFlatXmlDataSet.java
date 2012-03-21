@@ -15,6 +15,8 @@
  */
 package com.excilys.ebi.spring.dbunit.dataset.xml.flyweight;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -24,7 +26,6 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlWriter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Reads and writes flat XML dataset document. Each XML element corresponds to a
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Flat XML dataset document sample:
  * <p>
- * 
+ *
  * <pre>
  * &lt;!DOCTYPE dataset SYSTEM "my-dataset.dtd"&gt;
  * &lt;dataset&gt;
@@ -63,23 +64,23 @@ import org.slf4j.LoggerFactory;
  * basically reads in the whole XML into a buffer and dynamically adds new
  * columns as they appear. It can be used as demonstrated in the following
  * example:
- * 
+ *
  * <pre>
  * // since dbunit 2.4.7
  * FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
  * builder.setInputSource(new File(&quot;src/xml/flatXmlTableTest.xml&quot;));
  * builder.setColumnSensing(true);
  * IDataSet dataSet = builder.build();
- * 
+ *
  * // or dbunit release &lt;= 2.4.6:
  * boolean enableColumnSensing = true;
  * IDataSet dataSet = new FlatXmlDataSet(new File(&quot;src/xml/flatXmlTableTest.xml&quot;), false, enableColumnSensing);
  * </pre>
- * 
+ *
  * </li>
  * </ul>
  * </p>
- * 
+ *
  * @author Manuel Laflamme
  * @author gommma (gommma AT users.sourceforge.net)
  * @author Last changed by: $Author: gommma $
@@ -91,12 +92,12 @@ public class FlyWeightFlatXmlDataSet extends CachedDataSet {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(FlyWeightFlatXmlDataSet.class);
+	private static final Logger logger = getLogger(FlyWeightFlatXmlDataSet.class);
 
 	/**
 	 * Creates a new {@link FlyWeightFlatXmlDataSet} with the data of the given
 	 * producer.
-	 * 
+	 *
 	 * @param flatXmlProducer
 	 *            The producer that provides the {@link FlyWeightFlatXmlDataSet}
 	 *            content

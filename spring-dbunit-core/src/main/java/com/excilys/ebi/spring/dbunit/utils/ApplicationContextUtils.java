@@ -15,10 +15,11 @@
  */
 package com.excilys.ebi.spring.dbunit.utils;
 
+import static org.springframework.util.Assert.isTrue;
+
 import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.Assert;
 
 public class ApplicationContextUtils {
 
@@ -29,7 +30,7 @@ public class ApplicationContextUtils {
 	public static <T> T getOptionalUniqueBeanOfType(ApplicationContext applicationContext, Class<T> type) {
 		Map<String, T> configs = applicationContext.getBeansOfType(type);
 
-		Assert.isTrue(configs.size() <= 1, "found more than one bean in the applicationContext");
+		isTrue(configs.size() <= 1, "found more than one bean in the applicationContext");
 
 		return configs.size() == 1 ? configs.values().iterator().next() : null;
 	}

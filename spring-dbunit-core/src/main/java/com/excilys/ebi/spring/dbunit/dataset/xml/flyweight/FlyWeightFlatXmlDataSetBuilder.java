@@ -15,6 +15,8 @@
  */
 package com.excilys.ebi.spring.dbunit.dataset.xml.flyweight;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,12 +28,11 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 /**
  * Builder for the creation of {@link FlyWeightFlatXmlDataSet} instances.
- * 
+ *
  * @see FlyWeightFlatXmlDataSet
  * @author gommma (gommma AT users.sourceforge.net)
  * @author Last changed by: $Author: gommma $
@@ -43,7 +44,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(FlyWeightFlatXmlDataSetBuilder.class);
+	private static final Logger logger = getLogger(FlyWeightFlatXmlDataSetBuilder.class);
 
 	/**
 	 * The metadata (column information etc.) for the flat XML to be built. If
@@ -87,7 +88,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Sets the flat XML input source from which the
 	 * {@link FlyWeightFlatXmlDataSet} is to be built
-	 * 
+	 *
 	 * @param inputSource
 	 *            The flat XML input as {@link InputSource}
 	 * @return The created {@link FlyWeightFlatXmlDataSet}
@@ -100,7 +101,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Sets the flat XML input source from which the
 	 * {@link FlyWeightFlatXmlDataSet} is to be built
-	 * 
+	 *
 	 * @param xmlInputFile
 	 *            The flat XML input as {@link File}
 	 * @return The created {@link FlyWeightFlatXmlDataSet}
@@ -115,7 +116,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Sets the flat XML input source from which the
 	 * {@link FlyWeightFlatXmlDataSet} is to be built
-	 * 
+	 *
 	 * @param xmlInputUrl
 	 *            The flat XML input as {@link URL}
 	 * @return The created {@link FlyWeightFlatXmlDataSet}
@@ -129,7 +130,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Sets the flat XML input source from which the
 	 * {@link FlyWeightFlatXmlDataSet} is to be built
-	 * 
+	 *
 	 * @param xmlReader
 	 *            The flat XML input as {@link Reader}
 	 * @return The created {@link FlyWeightFlatXmlDataSet}
@@ -143,7 +144,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Sets the flat XML input source from which the
 	 * {@link FlyWeightFlatXmlDataSet} is to be built
-	 * 
+	 *
 	 * @param xmlInputStream
 	 *            The flat XML input as {@link InputStream}
 	 * @return The created {@link FlyWeightFlatXmlDataSet}
@@ -156,7 +157,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 
 	/**
 	 * Utility method to create an {@link InputSource} object from a URL
-	 * 
+	 *
 	 * @param xmlInputUrl
 	 * @return
 	 */
@@ -168,7 +169,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Set the metadata information (column info etc.) to be used. May come from
 	 * a DTD. This has precedence to the other builder's properties.
-	 * 
+	 *
 	 * @param metaDataSet
 	 * @return this
 	 */
@@ -180,7 +181,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Set the metadata information (column info etc.) to be used from the given
 	 * DTD input. This has precedence to the other builder's properties.
-	 * 
+	 *
 	 * @param dtdReader
 	 *            A reader that provides the DTD content
 	 * @throws DataSetException
@@ -195,7 +196,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Set the metadata information (column info etc.) to be used from the given
 	 * DTD input. This has precedence to the other builder's properties.
-	 * 
+	 *
 	 * @param dtdStream
 	 * @throws DataSetException
 	 * @throws IOException
@@ -212,7 +213,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 
 	/**
 	 * Whether or not DTD metadata is available to parse via a DTD handler.
-	 * 
+	 *
 	 * @param dtdMetadata
 	 * @return this
 	 */
@@ -229,7 +230,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	 * Since DBUnit 2.3.0 there is a functionality called "column sensing" which
 	 * basically reads in the whole XML into a buffer and dynamically adds new
 	 * columns as they appear.
-	 * 
+	 *
 	 * @param columnSensing
 	 * @return this
 	 */
@@ -244,7 +245,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 
 	/**
 	 * Whether or not the created dataset should use case sensitive table names
-	 * 
+	 *
 	 * @param caseSensitiveTableNames
 	 * @return this
 	 */
@@ -256,7 +257,7 @@ public final class FlyWeightFlatXmlDataSetBuilder {
 	/**
 	 * Builds the {@link FlyWeightFlatXmlDataSet} from the parameters that are
 	 * currently set on this builder
-	 * 
+	 *
 	 * @param inputSource
 	 *            The XML input to be built
 	 * @return The {@link FlyWeightFlatXmlDataSet} built from the configuration

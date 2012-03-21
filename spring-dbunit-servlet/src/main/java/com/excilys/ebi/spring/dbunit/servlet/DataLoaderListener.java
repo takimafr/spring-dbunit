@@ -15,13 +15,14 @@
  */
 package com.excilys.ebi.spring.dbunit.servlet;
 
+import static org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
 import com.excilys.ebi.spring.dbunit.DataLoader;
@@ -45,7 +46,7 @@ public class DataLoaderListener implements ServletContextListener {
 
 	public void contextInitialized(ServletContextEvent sce) {
 
-		context = WebApplicationContextUtils.getWebApplicationContext(sce.getServletContext());
+		context = getWebApplicationContext(sce.getServletContext());
 
 		try {
 			configuration = configurationProcessor.getConfiguration(context);

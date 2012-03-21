@@ -15,6 +15,8 @@
  */
 package com.excilys.ebi.spring.dbunit.dataset.xml.flyweight;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ import com.excilys.ebi.spring.dbunit.dataset.xml.LinkedHashMapFlatDtdProducer;
  * redundant data.
  * https://sourceforge.net/tracker/?func=detail&aid=3405335&group_id
  * =47439&atid=449494
- * 
+ *
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
 public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSetProducer, ContentHandler {
@@ -64,7 +66,7 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(FlyWeightFlatXmlProducer.class);
+	private static final Logger logger = getLogger(FlyWeightFlatXmlProducer.class);
 
 	private static final IDataSetConsumer EMPTY_CONSUMER = new DefaultConsumer();
 	private static final String DATASET = "dataset";
@@ -224,7 +226,7 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 
 	/**
 	 * merges the existing columns with the potentially new ones.
-	 * 
+	 *
 	 * @param columnsToMerge
 	 *            List of extra columns found, which need to be merge back into
 	 *            the metadata.
@@ -274,17 +276,17 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 	/**
 	 * parses the attributes in the current row, and checks whether a new column
 	 * is found.
-	 * 
+	 *
 	 * <p>
 	 * Depending on the value of the <code>columnSensing</code> flag, the
 	 * appropriate action is taken:
 	 * </p>
-	 * 
+	 *
 	 * <ul>
 	 * <li>If it is true, the new column is merged back into the metadata;</li>
 	 * <li>If not, a warning message is displayed.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param attributes
 	 *            Attributed for the current row.
 	 * @throws DataSetException
@@ -530,7 +532,7 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 
 	/**
 	 * Wraps a {@link SAXException} into a {@link DataSetException}
-	 * 
+	 *
 	 * @param cause
 	 *            The cause to be wrapped into a {@link DataSetException}
 	 * @return A {@link DataSetException} that wraps the given

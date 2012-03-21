@@ -15,12 +15,15 @@
  */
 package com.excilys.ebi.spring.dbunit;
 
+import static org.springframework.jdbc.datasource.DataSourceUtils.getConnection;
+import static org.springframework.jdbc.datasource.DataSourceUtils.isConnectionTransactional;
+import static org.springframework.jdbc.datasource.DataSourceUtils.releaseConnection;
+
 import java.sql.Connection;
 
 import javax.sql.DataSource;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.config.DatabaseConnectionConfigurer;
@@ -62,14 +65,14 @@ public class DefaultDataLoader implements DataLoader {
 		Connection connection = null;
 
 		try {
-			connection = DataSourceUtils.getConnection(dataSource);
+			connection = getConnection(dataSource);
 			populator.populate(connection);
 
 		} finally {
-			if (connection != null && !DataSourceUtils.isConnectionTransactional(connection, dataSource)) {
+			if (connection != null && !isConnectionTransactional(connection, dataSource)) {
 				// if the connection is transactional, closing it. Otherwise,
 				// expects that the framework will do it
-				DataSourceUtils.releaseConnection(connection, dataSource);
+				releaseConnection(connection, dataSource);
 			}
 		}
 	}

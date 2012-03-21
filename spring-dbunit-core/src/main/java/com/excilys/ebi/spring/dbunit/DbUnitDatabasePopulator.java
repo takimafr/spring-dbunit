@@ -15,6 +15,8 @@
  */
 package com.excilys.ebi.spring.dbunit;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
@@ -26,7 +28,6 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.util.StopWatch;
@@ -37,7 +38,7 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
 
 public class DbUnitDatabasePopulator implements DatabasePopulator {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DbUnitDatabasePopulator.class);
+	private static final Logger LOGGER = getLogger(DbUnitDatabasePopulator.class);
 
 	private DataSetConfiguration dataSetConfiguration;
 

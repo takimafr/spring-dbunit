@@ -15,11 +15,13 @@
  */
 package com.excilys.ebi.spring.dbunit.test.conventions;
 
-import org.springframework.core.io.support.ResourcePatternUtils;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
+import static org.springframework.core.io.support.ResourcePatternUtils.isUrl;
+import static org.springframework.util.ClassUtils.classPackageAsResourcePath;
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static org.springframework.util.StringUtils.cleanPath;
+import static org.springframework.util.StringUtils.hasLength;
+
 import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
 
 public class DefaultConfigurationConventions implements ConfigurationConventions {
 
@@ -35,7 +37,7 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 * specified {@link Class class} and the {@link #getResourceName resource
 	 * file name} ; otherwise, the supplied <code>location</code> will be
 	 * {@link #modifyLocation modified} if necessary and returned.
-	 * 
+	 *
 	 * @param clazz
 	 *            the class with which the location is associated: to be used
 	 *            when generating a default location
@@ -48,14 +50,14 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 */
 	public String[] getDataSetResourcesLocations(Class<?> clazz, String[] locations) {
 
-		if (ObjectUtils.isEmpty(locations)) {
+		if (isEmpty(locations)) {
 			locations = new String[] { null };
 		}
 
 		String[] resourceLocations = new String[locations.length];
 
 		for (int i = 0; i < locations.length; i++) {
-			String resourceLocation = !StringUtils.hasLength(locations[i]) ? getDefaultLocationByConventions(clazz) : getRealLocationByConventions(clazz, locations[i]);
+			String resourceLocation = !hasLength(locations[i]) ? getDefaultLocationByConventions(clazz) : getRealLocationByConventions(clazz, locations[i]);
 			resourceLocations[i] = resourceLocation;
 		}
 
@@ -76,7 +78,7 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 * <p>
 	 * Subclasses can override this method to implement a different
 	 * <em>location modification</em> strategy.
-	 * 
+	 *
 	 * @param clazz
 	 *            the class with which the locations are associated
 	 * @param locations
@@ -87,10 +89,10 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 		String modifiedLocation = null;
 		if (location.startsWith("/")) {
 			modifiedLocation = ResourceUtils.CLASSPATH_URL_PREFIX + location;
-		} else if (!ResourcePatternUtils.isUrl(location)) {
-			modifiedLocation = ResourceUtils.CLASSPATH_URL_PREFIX + StringUtils.cleanPath(ClassUtils.classPackageAsResourcePath(clazz) + "/" + location);
+		} else if (!isUrl(location)) {
+			modifiedLocation = ResourceUtils.CLASSPATH_URL_PREFIX + cleanPath(classPackageAsResourcePath(clazz) + "/" + location);
 		} else {
-			modifiedLocation = StringUtils.cleanPath(location);
+			modifiedLocation = cleanPath(location);
 		}
 		return modifiedLocation;
 	}
@@ -107,7 +109,7 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 * <p>
 	 * Subclasses can override this method to implement a different
 	 * <em>default location generation</em> strategy.
-	 * 
+	 *
 	 * @param clazz
 	 *            the class for which the default locations are to be generated
 	 * @return an array of default application context resource locations
@@ -117,7 +119,7 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(ResourceUtils.CLASSPATH_URL_PREFIX);
-		builder.append(StringUtils.cleanPath(ClassUtils.classPackageAsResourcePath(clazz)));
+		builder.append(cleanPath(classPackageAsResourcePath(clazz)));
 		builder.append("/");
 		builder.append(DEFAULT_RESOURCE_NAME);
 		return builder.toString();
