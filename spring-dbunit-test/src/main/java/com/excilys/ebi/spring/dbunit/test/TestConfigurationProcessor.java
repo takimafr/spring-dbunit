@@ -47,14 +47,14 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 	/**
 	 * The logger
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(TestConfigurationProcessor.class);
+	protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	private final ConfigurationConventions conventions;
 
 	/**
 	 * A configuration cache used between setup and teardown
 	 */
-	private final Map<Method, DataSetConfiguration> configurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, DataSetConfiguration>());
+	protected final Map<Method, DataSetConfiguration> configurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, DataSetConfiguration>());
 
 	/**
 	 * Configure with default conventions
@@ -101,7 +101,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		return configuration;
 	}
 
-	private DataSetConfiguration buildConfiguration(DataSet annotation, TestContext testContext) throws DataSetException, IOException {
+	protected final DataSetConfiguration buildConfiguration(DataSet annotation, TestContext testContext) throws DataSetException, IOException {
 
 		String[] dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
 
