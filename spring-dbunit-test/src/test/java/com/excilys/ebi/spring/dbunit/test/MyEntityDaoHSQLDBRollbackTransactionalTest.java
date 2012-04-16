@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "applicationContext-test-transactional.xml", "applicationContext-test-hsqldb.xml" })
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,TransactionalTestExecutionListener.class ,RollbackTransactionalDataSetTestExecutionListener.class })
+@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class, RollbackTransactionalDataSetTestExecutionListener.class })
 @TransactionConfiguration
 @Transactional
 @DataSet

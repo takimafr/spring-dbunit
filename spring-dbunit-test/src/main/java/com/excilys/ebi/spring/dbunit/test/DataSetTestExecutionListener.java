@@ -38,17 +38,19 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
  */
 public class DataSetTestExecutionListener extends AbstractTestExecutionListener {
 
-	private DataLoader dataLoader = new DefaultDataLoader();
-	private ConfigurationProcessor<TestContext> configurationProcessor = new TestConfigurationProcessor();
-	private DataSetConfiguration configuration;
+	protected DataLoader dataLoader = new DefaultDataLoader();
+	protected ConfigurationProcessor<TestContext> configurationProcessor = new TestConfigurationProcessor();
+
+	protected DataSetConfiguration getConfiguration(TestContext testContext) throws Exception {
+		return configurationProcessor.getConfiguration(testContext);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void beforeTestMethod(TestContext testContext) throws Exception {
-		configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.SETUP);
+		dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.SETUP);
 	}
 
 	/**
@@ -56,6 +58,6 @@ public class DataSetTestExecutionListener extends AbstractTestExecutionListener 
 	 */
 	@Override
 	public void afterTestMethod(TestContext testContext) throws Exception {
-		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.TEARDOWN);
+		dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.TEARDOWN);
 	}
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * 
+ *
  */
 package com.excilys.ebi.spring.dbunit.test;
 
@@ -31,62 +31,66 @@ import org.springframework.test.context.TestContext;
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
 
 /**
- * Test configuration processor strategie to figure out if we need to 
- * load some specifique dataSet at Class or Method level. 
+ * Test configuration processor strategy to figure out if we need to load some
+ * specific dataSet at Class or Method level.
  * 
  * <p>
- * 	 Moreover, if in Method level, we just look for DataSet annotation on the method
- * 	 (instead of TestConfigurationProcessor) because the Class should have already
- * 	 been taken care of.
- * </p> 
+ * Moreover, if in Method level, we just look for DataSet annotation on the
+ * method (instead of TestConfigurationProcessor) because the Class should have
+ * already been taken care of.
+ * </p>
  * 
  * @author <a href="mailto:pcavezzan@gmail.com">Patrice CAVEZZAN</a>
  */
-public class RollbackTransactionalTestConfigurationProcessor extends TestConfigurationProcessor {	
+public class RollbackTransactionalTestConfigurationProcessor extends TestConfigurationProcessor {
 	/**
 	 * A configuration cache used between setup and teardown
 	 */
 	private final Map<Class<?>, DataSetConfiguration> configurationClassCache = Collections.synchronizedMap(new IdentityHashMap<Class<?>, DataSetConfiguration>());
-	
-	/* (non-Javadoc)
-	 * @see com.excilys.ebi.spring.dbunit.ConfigurationProcessor#getConfiguration(java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.excilys.ebi.spring.dbunit.ConfigurationProcessor#getConfiguration
+	 * (java.lang.Object)
 	 */
 	@Override
 	public DataSetConfiguration getConfiguration(TestContext testContext) throws IOException, DatabaseUnitException {
 		DataSetConfiguration configuration = null;
-		
-		final Method testMethod = testContext.getTestMethod(); 
-		
-		if(testMethod == null){ // beforeTestClass or afterTestClass
-			
+
+		final Method testMethod = testContext.getTestMethod();
+
+		if (testMethod == null) { // beforeTestClass or afterTestClass
+
 			configuration = configurationClassCache.get(testContext.getTestClass());
-			
-			if(configuration == null){
+
+			if (configuration == null) {
 				final DataSet dataSetAnnotation = AnnotationUtils.findAnnotation(testContext.getTestClass(), DataSet.class);
-				
+
 				if (dataSetAnnotation != null) {
 					LOGGER.debug("Configuring database at Class level");
 					configuration = buildConfiguration(dataSetAnnotation, testContext);
 					configurationClassCache.put(testContext.getTestClass(), configuration);
 				}
 			}
-		}else{ // beforeTestMethod or afterTestMethod
-			
+		} else { // beforeTestMethod or afterTestMethod
+
 			configuration = configurationCache.get(testMethod);
-			if(configuration == null){
+			if (configuration == null) {
 				DataSet dataSetAnnotation = AnnotationUtils.findAnnotation(testContext.getTestMethod(), DataSet.class);
 
 				if (dataSetAnnotation != null) {
 					LOGGER.debug("Configuring database at Method level");
 					configuration = buildConfiguration(dataSetAnnotation, testContext);
 					configurationCache.put(testContext.getTestMethod(), configuration);
-				}else if(configurationClassCache.get(testContext.getTestClass()) == null){
+				} else if (configurationClassCache.get(testContext.getTestClass()) == null) {
 					LOGGER.info("DataSetTestExecutionListener was configured but without any DataSet or DataSets! DataSet features are disabled");
 				}
 			}
 		}
-		
+
 		return configuration;
 	}
-	
+
 }

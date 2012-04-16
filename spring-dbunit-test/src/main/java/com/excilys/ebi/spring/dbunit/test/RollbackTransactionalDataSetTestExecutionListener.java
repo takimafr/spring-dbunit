@@ -14,69 +14,38 @@
  * limitations under the License.
  */
 /**
- * 
+ *
  */
 package com.excilys.ebi.spring.dbunit.test;
 
 import org.springframework.test.context.TestContext;
-import org.springframework.test.context.support.AbstractTestExecutionListener;
 
-import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
-import com.excilys.ebi.spring.dbunit.DataLoader;
-import com.excilys.ebi.spring.dbunit.DefaultDataLoader;
-import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.config.Phase;
 
 /**
- * Listener that can load data at class level (for general data test) and
- * method level (for specific data test).
+ * Listener that can load data at class level (for general data test) and method
+ * level (for specific data test).
  * 
  * <p>
- * 	 <i>
- *		 <b>Notice:</b>
- *		 this listener has to be used for tests in transactional context with
- *		 a rollback strategy after test method.
- *	 </i>					
+ * <i> <b>Notice:</b> this listener has to be used for tests in transactional
+ * context with a rollback strategy after test method. </i>
  * </p>
  * 
  * @author <a href="mailto:pcavezzan@gmail.com">Patrice CAVEZZAN</a>
  */
-public class RollbackTransactionalDataSetTestExecutionListener extends AbstractTestExecutionListener {
-	private final DataLoader dataLoader = new DefaultDataLoader();
-	private final ConfigurationProcessor<TestContext> configurationProcessor = new RollbackTransactionalTestConfigurationProcessor();
-	private DataSetConfiguration configuration;
+public class RollbackTransactionalDataSetTestExecutionListener extends DataSetTestExecutionListener {
 
-	/* (non-Javadoc)
-	 * @see com.excilys.ebi.spring.dbunit.test.DataSetTestExecutionListener#beforeTestMethod(org.springframework.test.context.TestContext)
-	 */
-	@Override
-	public void beforeTestMethod(TestContext testContext) throws Exception {
-		configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.SETUP);
+	public RollbackTransactionalDataSetTestExecutionListener() {
+		configurationProcessor = new RollbackTransactionalTestConfigurationProcessor();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.excilys.ebi.spring.dbunit.test.DataSetTestExecutionListener#afterTestMethod(org.springframework.test.context.TestContext)
-	 */
-	@Override
-	public void afterTestMethod(TestContext testContext) throws Exception {
-		configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.TEARDOWN);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.springframework.test.context.support.AbstractTestExecutionListener#beforeTestClass(org.springframework.test.context.TestContext)
-	 */
 	@Override
 	public void beforeTestClass(TestContext testContext) throws Exception {
-		configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.SETUP);
+		dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.SETUP);
 	}
 
 	@Override
 	public void afterTestClass(TestContext testContext) throws Exception {
-		configuration = configurationProcessor.getConfiguration(testContext);
-		dataLoader.execute(testContext.getApplicationContext(), configuration, Phase.TEARDOWN);
+		dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.TEARDOWN);
 	}
-	
 }

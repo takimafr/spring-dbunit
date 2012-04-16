@@ -65,7 +65,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 
 	/**
 	 * Configure with custom conventions
-	 * 
+	 *
 	 * @param conventions
 	 */
 	public TestConfigurationProcessor(ConfigurationConventions conventions) {
@@ -118,7 +118,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		.withDbType(annotation.dbType())/**/
 		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
 		.withDataSetResourceLocations(dataSetResourceLocations)/**/
-		.withEscapePattern(annotation.escapePattern())
+		.withEscapePattern(annotation.escapePattern())/**/
 		.build();
 	}
 
