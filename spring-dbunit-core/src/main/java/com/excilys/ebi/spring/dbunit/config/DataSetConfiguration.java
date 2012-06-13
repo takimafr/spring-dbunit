@@ -124,7 +124,8 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 		}
 
 		public Builder withEscapePattern(String escapePattern) {
-			dataSetConfiguration.escapePattern = escapePattern;
+			escapePattern = escapePattern.trim();
+			dataSetConfiguration.escapePattern = escapePattern.isEmpty() ? null : escapePattern;
 			return this;
 		}
 

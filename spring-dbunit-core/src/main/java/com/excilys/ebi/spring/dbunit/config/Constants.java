@@ -35,7 +35,7 @@ public interface Constants {
 
 		public static final boolean DEFAULT_CASE_SENSITIVE_TABLE_NAMES = false;
 
-		public static final String DEFAULT_ESCAPE_PATTERN = "\"?\"";
+		public static final String DEFAULT_ESCAPE_PATTERN = "";
 
 		public static final int DEFAULT_BATCH_SIZE = 100;
 
