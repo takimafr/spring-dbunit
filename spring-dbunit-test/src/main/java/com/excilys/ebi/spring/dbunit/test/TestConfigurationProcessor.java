@@ -65,7 +65,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 
 	/**
 	 * Configure with custom conventions
-	 *
+	 * 
 	 * @param conventions
 	 */
 	public TestConfigurationProcessor(ConfigurationConventions conventions) {
@@ -106,6 +106,13 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		String[] dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
 
 		return newDataSetConfiguration()/**/
+		.withBatchedStatements(annotation.batchedStatements())/**/
+		.withBatchSize(annotation.batchSize())/**/
+		.withDataSetResourceLocations(dataSetResourceLocations)/**/
+		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
+		.withDbType(annotation.dbType())/**/
+		.withEscapePattern(annotation.escapePattern())/**/
+		.withFetchSize(annotation.fetchSize())/**/
 		.withFormat(annotation.format())/**/
 		.withFormatOptions(newFormatOptions()//
 				.withColumnSensing(annotation.columnSensing())//
@@ -114,11 +121,10 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 				.withCaseSensitiveTableNames(annotation.caseSensitiveTableNames())//
 				.build())/**/
 		.withSetUpOp(annotation.setUpOperation())/**/
+		.withSkipOracleRecycleBinTables(annotation.skipOracleRecycleBinTables())/**/
 		.withTearDownOp(annotation.tearDownOperation())/**/
-		.withDbType(annotation.dbType())/**/
-		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
-		.withDataSetResourceLocations(dataSetResourceLocations)/**/
-		.withEscapePattern(annotation.escapePattern())/**/
+		.withTableType(annotation.tableType())/**/
+		.withQualifiedTableNames(annotation.qualifiedTableNames())/**/
 		.build();
 	}
 
