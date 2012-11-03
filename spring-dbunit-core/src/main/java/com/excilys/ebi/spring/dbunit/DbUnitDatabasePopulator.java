@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.util.StopWatch;
+import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.config.DatabaseConnectionConfigurer;
@@ -53,7 +54,8 @@ public class DbUnitDatabasePopulator implements DatabasePopulator {
 		DatabaseOperation operation = phase.getOperation(dataSetConfiguration);
 		try {
 			IDataSet dataSet = dataSetConfiguration.getDataSet();
-			DatabaseConnection databaseConnection = getDatabaseConnection(connection, dataSetConfiguration);
+			String schema = dataSetConfiguration.getSchema();
+			DatabaseConnection databaseConnection = getDatabaseConnection(connection, schema, dataSetConfiguration);
 			sw.start("populating");
 			operation.execute(databaseConnection, dataSet);
 			sw.stop();
@@ -71,9 +73,9 @@ public class DbUnitDatabasePopulator implements DatabasePopulator {
 		}
 	}
 
-	private DatabaseConnection getDatabaseConnection(Connection connection, DatabaseConnectionConfigurer databaseConnectionConfigurer) throws DatabaseUnitException {
+	private DatabaseConnection getDatabaseConnection(Connection connection, String schema, DatabaseConnectionConfigurer databaseConnectionConfigurer) throws DatabaseUnitException {
 
-		DatabaseConnection databaseConnection = new DatabaseConnection(connection);
+		DatabaseConnection databaseConnection = StringUtils.hasLength(schema) ? new DatabaseConnection(connection, schema) : new DatabaseConnection(connection);
 		DatabaseConfig databaseConfig = databaseConnection.getConfig();
 		databaseConnectionConfigurer.configure(databaseConfig);
 

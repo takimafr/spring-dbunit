@@ -49,6 +49,7 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 	private boolean batchedStatements = ConfigurationDefaults.DEFAULT_BATCHED_STATEMENTS;
 	private boolean skipOracleRecycleBinTables = ConfigurationDefaults.DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES;
 	private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
+	private String schema;
 
 	public IDataSet getDataSet() throws DataSetException, IOException {
 
@@ -156,6 +157,12 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 
 		public Builder withTableType(String[] tableType) {
 			dataSetConfiguration.tableType = tableType;
+			return this;
+		}
+
+		public Builder withSchema(String schema) {
+			schema = schema.trim();
+			dataSetConfiguration.schema = schema.isEmpty() ? null : schema;
 			return this;
 		}
 
@@ -298,5 +305,13 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 
 	public void setTableType(String[] tableType) {
 		this.tableType = tableType;
+	}
+
+	public String getSchema() {
+		return schema;
+	}
+
+	public void setSchema(String schema) {
+		this.schema = schema;
 	}
 }

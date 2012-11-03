@@ -154,4 +154,9 @@ public @interface DataSet {
 	 * @return default {@link ConfigurationDefaults.DEFAULT_TABLE_TYPE}
 	 */
 	String[] tableType() default { "TABLE" };
+	
+	/**
+	 * @return the schema
+	 */
+	String schema() default "";
 }

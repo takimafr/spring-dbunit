@@ -125,6 +125,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		.withTearDownOp(annotation.tearDownOperation())/**/
 		.withTableType(annotation.tableType())/**/
 		.withQualifiedTableNames(annotation.qualifiedTableNames())/**/
+		.withSchema(annotation.schema())/**/
 		.build();
 	}
 
