@@ -49,7 +49,7 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 	private boolean batchedStatements = ConfigurationDefaults.DEFAULT_BATCHED_STATEMENTS;
 	private boolean skipOracleRecycleBinTables = ConfigurationDefaults.DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES;
 	private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
-	private String schema;
+	private String schema = ConfigurationDefaults.DEFAULT_SCHEMA;
 
 	public IDataSet getDataSet() throws DataSetException, IOException {
 

@@ -48,5 +48,7 @@ public interface Constants {
 		public static final boolean DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES = false;
 
 		public static final String[] DEFAULT_TABLE_TYPE = { "TABLE" };
+
+		public static final String DEFAULT_SCHEMA = System.getProperty("spring.dbunit.schema");
 	}
 }
