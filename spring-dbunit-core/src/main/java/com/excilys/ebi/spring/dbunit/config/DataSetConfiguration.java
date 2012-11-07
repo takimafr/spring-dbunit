@@ -162,7 +162,8 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 
 		public Builder withSchema(String schema) {
 			schema = schema.trim();
-			dataSetConfiguration.schema = schema.isEmpty() ? null : schema;
+			if (!schema.isEmpty())
+				dataSetConfiguration.schema = schema;
 			return this;
 		}
 
