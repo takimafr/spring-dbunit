@@ -156,7 +156,8 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 		}
 
 		public Builder withTableType(String[] tableType) {
-			dataSetConfiguration.tableType = tableType;
+			if (tableType != null)
+				dataSetConfiguration.tableType = tableType;
 			return this;
 		}
 
