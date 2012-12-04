@@ -23,6 +23,7 @@ import java.util.List;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
+import org.dbunit.dataset.excel.XlsDataSet;
 import org.dbunit.dataset.stream.StreamingDataSet;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
@@ -84,6 +85,7 @@ public enum DataSetFormat {
 			return builder.build(resource.getInputStream());
 		}
 	},
+
 	/**
 	 * @see {@link XmlDataSet}.
 	 */
@@ -96,6 +98,7 @@ public enum DataSetFormat {
 			return new XmlDataSet(resource.getInputStream());
 		}
 	},
+
 	/**
 	 * @see {@link StreamingXmlDataSet}.
 	 */
@@ -108,6 +111,7 @@ public enum DataSetFormat {
 			return new StreamingDataSet(new XmlProducer(new InputSource(resource.getInputStream())));
 		}
 	},
+
 	/**
 	 * @see {@link FlatDtdDataSet}.
 	 */
@@ -118,6 +122,7 @@ public enum DataSetFormat {
 			return new FlatDtdDataSet(new LinkedHashMapFlatDtdProducer(new InputSource(resource.getInputStream())));
 		}
 	},
+
 	/**
 	 * @see {@link CsvDataSet}.
 	 */
@@ -125,6 +130,16 @@ public enum DataSetFormat {
 		@Override
 		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
 			return new CsvDataSet(resource.getFile());
+		}
+	},
+
+	/**
+	 * @see {@link CsvDataSet}.
+	 */
+	XLS {
+		@Override
+		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+			return new XlsDataSet(resource.getFile());
 		}
 	};
 
