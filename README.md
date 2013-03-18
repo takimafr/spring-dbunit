@@ -16,12 +16,12 @@ Use cases examples :
 
 Have a look at the Wiki for modules documentation :
 
-* [Test support](/excilys/spring-dbunit/wiki/spring-dbunit-test-module)
-* [Servlet support](/excilys/spring-dbunit/wiki/spring-dbunit-servlet-module)
+* [Test support](https://github.com/excilys/spring-dbunit/wiki/spring-dbunit-test-module)
+* [Servlet support](https://github.com/excilys/spring-dbunit/wiki/spring-dbunit-servlet-module)
 
 ## Where are the binaries?
 
-See [Maven](/excilys/spring-dbunit/wiki/maven) Wiki page.
+See [Maven](https://github.com/excilys/spring-dbunit/wiki/maven) Wiki page.
 
 ## Release Notes
 See [Milestones](https://github.com/excilys/spring-dbunit/issues/milestones?state=closed)
