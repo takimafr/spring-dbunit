@@ -10,6 +10,10 @@
 		<developerConnection>scm:git:git@github.com:excilys/spring-dbunit.git</developerConnection>
 		<url>https://github.com/excilys/spring-dbunit.git</url>
 	</scm>
+	
+	<prerequisites>
+	    <maven>2.2.1</maven>
+	</prerequisites>
 
 	<distributionManagement>
 		<repository>
