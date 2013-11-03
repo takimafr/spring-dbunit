@@ -59,7 +59,7 @@
 		<tomcat-jdbc.version>7.0.33</tomcat-jdbc.version>
 		<servlet-api.version>2.5</servlet-api.version>
 
-		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<maven-license-plugin.version>1.10.b1</maven-license-plugin.version>
 	</properties>
 
