@@ -47,7 +47,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.5</java.version>
 
-		<spring.version>3.2.4.RELEASE</spring.version>
+		<spring.version>4.0.0.RELEASE</spring.version>
 		<junit.version>4.11</junit.version>
 		<dbunit.version>2.4.9</dbunit.version>
 		<hsqldb.version>2.3.1</hsqldb.version>
@@ -60,7 +60,7 @@
 		<commons-logging.version>99.0-does-not-exist</commons-logging.version>
 		<commons-collections.version>3.2.1</commons-collections.version>
 		<tomcat-slf4j.version>1.0.0</tomcat-slf4j.version>
-		<tomcat-jdbc.version>7.0.33</tomcat-jdbc.version>
+		<tomcat-jdbc.version>7.0.47</tomcat-jdbc.version>
 		<servlet-api.version>2.5</servlet-api.version>
 
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
