@@ -1,4 +1,7 @@
-# spring-dbunit 1.1.12
+# spring-dbunit 1.2.0
+
+> 1.2 is a breaking change only compatible with Spring 4. For Spring < 4 users, please use 1.1.x.
+
 
 ## What for?
 
