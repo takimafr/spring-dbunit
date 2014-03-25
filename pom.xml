@@ -183,7 +183,7 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<build>
+	<!--build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -256,5 +256,5 @@
 				<artifactId>maven-license-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+	</build-->
 </project>
