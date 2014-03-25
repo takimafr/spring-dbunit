@@ -17,6 +17,7 @@ package com.excilys.ebi.spring.dbunit.test;
 
 import static com.excilys.ebi.spring.dbunit.config.DataSetConfiguration.newDataSetConfiguration;
 import static com.excilys.ebi.spring.dbunit.config.DataSetFormatOptions.newFormatOptions;
+import static com.excilys.ebi.spring.dbunit.config.ExpectedDataSetConfiguration.newExpectedDataSetConfiguration;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -36,6 +37,7 @@ import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
+import com.excilys.ebi.spring.dbunit.config.ExpectedDataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.test.conventions.ConfigurationConventions;
 import com.excilys.ebi.spring.dbunit.test.conventions.DefaultConfigurationConventions;
 
@@ -55,6 +57,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 	 * A configuration cache used between setup and teardown
 	 */
 	protected final Map<Method, DataSetConfiguration> configurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, DataSetConfiguration>());
+	protected final Map<Method, ExpectedDataSetConfiguration> expectedConfigurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, ExpectedDataSetConfiguration>());
 
 	/**
 	 * Configure with default conventions
@@ -101,6 +104,35 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		return configuration;
 	}
 
+	/**
+	 * @param testContext
+	 *            the context
+	 * @return the configuration
+	 * @throws IOException
+	 *             I/O failureDataSet
+	 * @throws DatabaseUnitException
+	 *             DBUnit failure
+	 */
+	public ExpectedDataSetConfiguration getExpectedConfiguration(TestContext testContext) throws IOException, DatabaseUnitException {
+
+		ExpectedDataSetConfiguration configuration = expectedConfigurationCache.get(testContext.getTestMethod());
+
+		if (configuration == null) {
+			// no cached configuration --> instancing it
+			ExpectedDataSet expectedDataSetAnnotation = findAnnotation(testContext.getTestMethod(), testContext.getTestClass(), ExpectedDataSet.class);
+
+			if (expectedDataSetAnnotation != null) {
+				configuration = buildExpectedConfiguration(expectedDataSetAnnotation, testContext);
+				expectedConfigurationCache.put(testContext.getTestMethod(), configuration);
+
+			} else {
+				LOGGER.info("DataSetTestExecutionListener was configured but without any ExpectedDataSet or ExpectedDataSets! ExpectedDataSet features are disabled");
+			}
+		}
+
+		return configuration;
+	}
+
 	protected final DataSetConfiguration buildConfiguration(DataSet annotation, TestContext testContext) throws DataSetException, IOException {
 
 		String[] dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
@@ -129,12 +161,35 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		.build();
 	}
 
+	protected final ExpectedDataSetConfiguration buildExpectedConfiguration(ExpectedDataSet annotation, TestContext testContext) throws DataSetException, IOException {
+
+		String[] dataSetResourceLocations = getExpectedResourceLocationsByConventions(annotation, testContext);
+
+		return newExpectedDataSetConfiguration()/**/
+		.withDataSetResourceLocations(dataSetResourceLocations)/**/
+		.withColumnsToIgnore(annotation.columnsToIgnore())/**/
+		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
+		.withDbType(annotation.dbType())/**/
+		.withEscapePattern(annotation.escapePattern())/**/
+		.withFormat(annotation.format())/**/
+		.withFormatOptions(newFormatOptions()//
+				.withColumnSensing(annotation.columnSensing())//
+				.withDtdLocation(StringUtils.hasText(annotation.dtdLocation()) ? annotation.dtdLocation() : null)//
+				.withDtdMetadata(annotation.dtdMetadata())//
+				.withCaseSensitiveTableNames(annotation.caseSensitiveTableNames())//
+				.build())/**/
+		.withTableType(annotation.tableType())/**/
+		.withQualifiedTableNames(annotation.qualifiedTableNames())/**/
+		.withSchema(annotation.schema())/**/
+		.build();
+	}
+
 	/**
-	 * @param locations
-	 *            the possibly numerous files
+	 * @param annotation
+	 *            the DataSet annotation
 	 * @param testContext
 	 *            the context
-	 * @return an Inputstream, possibly the concatenation of several files
+	 * @return an String array, containing the locations of resources 
 	 * @throws IOException
 	 *             I/O failure
 	 */
@@ -147,6 +202,27 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		}
 
 		return conventions.getDataSetResourcesLocations(testContext.getTestClass(), locations);
+	}
+
+	
+	/**
+	 * @param annotation
+	 *            the ExpectedDataSet annotation
+	 * @param testContext
+	 *            the context
+	 * @return an String array, containing the locations of resources 
+	 * @throws IOException
+	 *             I/O failure
+	 */
+	private String[] getExpectedResourceLocationsByConventions(ExpectedDataSet annotation, TestContext testContext) throws IOException {
+
+		String[] valueLocations = annotation.value();
+		String[] locations = annotation.locations();
+		if (!ObjectUtils.isEmpty(valueLocations)) {
+			locations = valueLocations;
+		}
+
+		return conventions.getExpectedDataSetResourcesLocations(testContext.getTestClass(), locations);
 	}
 
 	/**

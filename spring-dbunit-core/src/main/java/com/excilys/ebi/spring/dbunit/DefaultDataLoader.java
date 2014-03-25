@@ -15,6 +15,7 @@
  */
 package com.excilys.ebi.spring.dbunit;
 
+import static com.excilys.ebi.spring.dbunit.utils.DbUnitUtils.lookUpDataSource;
 import static org.springframework.jdbc.datasource.DataSourceUtils.getConnection;
 import static org.springframework.jdbc.datasource.DataSourceUtils.isConnectionTransactional;
 import static org.springframework.jdbc.datasource.DataSourceUtils.releaseConnection;
@@ -43,18 +44,6 @@ public class DefaultDataLoader implements DataLoader {
 			DataSource dataSource = lookUpDataSource(context, dataSetConfiguration);
 			executeOperation(populator, dataSetConfiguration, dataSource);
 		}
-	}
-
-	/**
-	 * @param testContext
-	 *            the testContext
-	 * @return the DataSource used for loading the DataSet. If a name is
-	 *         specified in the configuration, use it, otherwise, expect one and
-	 *         only one DataSource in the ApplicationContext
-	 */
-	private DataSource lookUpDataSource(ApplicationContext applicationContext, DataSetConfiguration configuration) {
-		return configuration.getDataSourceSpringName() != null ? applicationContext.getBean(configuration.getDataSourceSpringName(), DataSource.class) : applicationContext
-				.getBean(DataSource.class);
 	}
 
 	/**
