@@ -15,6 +15,7 @@
  */
 package com.excilys.ebi.spring.dbunit;
 
+import static com.excilys.ebi.spring.dbunit.utils.DbUnitUtils.getDatabaseConnection;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
@@ -23,7 +24,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
@@ -31,10 +31,8 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.util.StopWatch;
-import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
-import com.excilys.ebi.spring.dbunit.config.DatabaseConnectionConfigurer;
 import com.excilys.ebi.spring.dbunit.config.Phase;
 
 public class DbUnitDatabasePopulator implements DatabasePopulator {
@@ -71,15 +69,6 @@ public class DbUnitDatabasePopulator implements DatabasePopulator {
 		} catch (IOException e) {
 			throw new DbUnitException(e);
 		}
-	}
-
-	private DatabaseConnection getDatabaseConnection(Connection connection, String schema, DatabaseConnectionConfigurer databaseConnectionConfigurer) throws DatabaseUnitException {
-
-		DatabaseConnection databaseConnection = StringUtils.hasLength(schema) ? new DatabaseConnection(connection, schema) : new DatabaseConnection(connection);
-		DatabaseConfig databaseConfig = databaseConnection.getConfig();
-		databaseConnectionConfigurer.configure(databaseConfig);
-
-		return databaseConnection;
 	}
 
 	public DataSetConfiguration getDataSetConfiguration() {

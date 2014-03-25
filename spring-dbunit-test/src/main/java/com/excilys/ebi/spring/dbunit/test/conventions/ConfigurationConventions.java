@@ -30,4 +30,13 @@ public interface ConfigurationConventions {
 	 * @return the corresponding resource locations
 	 */
 	String[] getDataSetResourcesLocations(Class<?> clazz, String[] locations);
+
+	/**
+	 * @param clazz
+	 *            the JUnit test class
+	 * @param locations
+	 *            the locations parameter as specified in the ExpectedDataSet annotation
+	 * @return the corresponding resource locations
+	 */
+	String[] getExpectedDataSetResourcesLocations(Class<?> clazz, String[] locations);
 }

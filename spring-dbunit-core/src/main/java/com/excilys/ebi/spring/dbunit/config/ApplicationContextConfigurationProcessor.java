@@ -30,6 +30,7 @@ import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
 public class ApplicationContextConfigurationProcessor implements ConfigurationProcessor<ApplicationContext> {
 
 	private DataSetConfiguration defaultConfiguration = new DataSetConfiguration();
+	private ExpectedDataSetConfiguration defaultExpectedConfiguration = new ExpectedDataSetConfiguration();
 
 	public DataSetConfiguration getConfiguration(ApplicationContext applicationContext) throws IOException, DatabaseUnitException {
 		return getOptionalUniqueBeanOfType(applicationContext, DataSetConfiguration.class, defaultConfiguration);
@@ -41,5 +42,9 @@ public class ApplicationContextConfigurationProcessor implements ConfigurationPr
 
 	public void setDefaultConfiguration(DataSetConfiguration defaultConfiguration) {
 		this.defaultConfiguration = defaultConfiguration;
+	}
+
+	public ExpectedDataSetConfiguration getExpectedConfiguration(ApplicationContext applicationContext) throws IOException, DatabaseUnitException {
+		return getOptionalUniqueBeanOfType(applicationContext, ExpectedDataSetConfiguration.class, defaultExpectedConfiguration);
 	}
 }

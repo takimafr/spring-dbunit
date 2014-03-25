@@ -31,6 +31,27 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	private static final String DEFAULT_RESOURCE_NAME = "dataSet.xml";
 
 	/**
+	 * Default resource name = "expectedDataSet.xml"
+	 */
+	private static final String DEFAULT_EXPECTED_RESOURCE_NAME = "expectedDataSet.xml";
+
+	private String[] getDataSetResourcesLocations(Class<?> clazz, String[] locations, final String defaultResourceName) {
+
+		if (isEmpty(locations)) {
+			locations = new String[] { null };
+		}
+
+		String[] resourceLocations = new String[locations.length];
+
+		for (int i = 0; i < locations.length; i++) {
+			String resourceLocation = !hasLength(locations[i]) ? getDefaultLocationByConventions(clazz, defaultResourceName) : getRealLocationByConventions(clazz, locations[i]);
+			resourceLocations[i] = resourceLocation;
+		}
+
+		return resourceLocations;
+	}
+
+	/**
 	 * If the supplied <code>location</code> is <code>null</code> or
 	 * <em>empty</em>, a default location will be
 	 * {@link #getDefaultLocationByConventions(Class) generated} for the
@@ -49,19 +70,29 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 * @see #modifyLocation
 	 */
 	public String[] getDataSetResourcesLocations(Class<?> clazz, String[] locations) {
+		return getDataSetResourcesLocations(clazz, locations, DEFAULT_RESOURCE_NAME);
+	}
 
-		if (isEmpty(locations)) {
-			locations = new String[] { null };
-		}
-
-		String[] resourceLocations = new String[locations.length];
-
-		for (int i = 0; i < locations.length; i++) {
-			String resourceLocation = !hasLength(locations[i]) ? getDefaultLocationByConventions(clazz) : getRealLocationByConventions(clazz, locations[i]);
-			resourceLocations[i] = resourceLocation;
-		}
-
-		return resourceLocations;
+	/**
+	 * If the supplied <code>location</code> is <code>null</code> or
+	 * <em>empty</em>, a default location will be
+	 * {@link #getDefaultLocationByConventions(Class) generated} for the
+	 * specified {@link Class class} and the {@link #getResourceName resource
+	 * file name} ; otherwise, the supplied <code>location</code> will be
+	 * {@link #modifyLocation modified} if necessary and returned.
+	 *
+	 * @param clazz
+	 *            the class with which the location is associated: to be used
+	 *            when generating a default location
+	 * @param locations
+	 *            the raw locations to use for loading the DataSet (can be
+	 *            <code>null</code> or empty)
+	 * @return DataSets locations
+	 * @see #generateDefaultLocation
+	 * @see #modifyLocation
+	 */
+	public String[] getExpectedDataSetResourcesLocations(Class<?> clazz, String[] locations) {
+		return getDataSetResourcesLocations(clazz, locations, DEFAULT_EXPECTED_RESOURCE_NAME);
 	}
 
 	/**
@@ -112,16 +143,18 @@ public class DefaultConfigurationConventions implements ConfigurationConventions
 	 *
 	 * @param clazz
 	 *            the class for which the default locations are to be generated
+	 * @param defaultResourceName
+	 *            the default resource name
 	 * @return an array of default application context resource locations
 	 * @see #getResourceSuffix()
 	 */
-	private String getDefaultLocationByConventions(Class<?> clazz) {
+	private String getDefaultLocationByConventions(Class<?> clazz, final String defaultResourceName) {
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(ResourceUtils.CLASSPATH_URL_PREFIX);
 		builder.append(cleanPath(classPackageAsResourcePath(clazz)));
 		builder.append("/");
-		builder.append(DEFAULT_RESOURCE_NAME);
+		builder.append(defaultResourceName);
 		return builder.toString();
 	}
 }
