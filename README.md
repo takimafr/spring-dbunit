@@ -1,3 +1,5 @@
+![](https://travis-ci.org/excilys/spring-dbunit.svg)
+
 # spring-dbunit 1.3.0
 
 > 1.2 was a breaking change only compatible with Spring 4. For Spring < 4 users, please use 1.1.x.
