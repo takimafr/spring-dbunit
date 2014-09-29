@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
@@ -34,6 +35,7 @@ import org.springframework.util.StopWatch;
 
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.config.Phase;
+import com.excilys.ebi.spring.dbunit.dataset.DataSetDecorator;
 
 public class DbUnitDatabasePopulator implements DatabasePopulator {
 
@@ -51,7 +53,7 @@ public class DbUnitDatabasePopulator implements DatabasePopulator {
 
 		DatabaseOperation operation = phase.getOperation(dataSetConfiguration);
 		try {
-			IDataSet dataSet = dataSetConfiguration.getDataSet();
+			IDataSet dataSet = decorateDataSetIfNeeded(dataSetConfiguration.getDataSet(), dataSetConfiguration.getDecorators());
 			String schema = dataSetConfiguration.getSchema();
 			DatabaseConnection databaseConnection = getDatabaseConnection(connection, schema, dataSetConfiguration);
 			sw.start("populating");
@@ -69,6 +71,26 @@ public class DbUnitDatabasePopulator implements DatabasePopulator {
 		} catch (IOException e) {
 			throw new DbUnitException(e);
 		}
+	}
+
+	private IDataSet decorateDataSetIfNeeded(IDataSet dataSet, Class<? extends DataSetDecorator>[] decorators) {
+	    if(decorators == null || decorators.length == 0)
+	        return dataSet;
+
+	    ReplacementDataSet decoratedSet = new ReplacementDataSet(dataSet);
+
+	    for(Class<? extends DataSetDecorator> decoratorClass : decorators) {
+	        try {
+                DataSetDecorator decorator = decoratorClass.newInstance();
+                decoratedSet.addReplacementSubstring(decorator.getStringToReplace(), decorator.getStringReplacement());
+            } catch (InstantiationException e) {
+                LOGGER.error("Could not instantiate DataSetDecorator {}" + decoratorClass, e);
+            } catch (IllegalAccessException e) {
+                LOGGER.error("Could not instantiate DataSetDecorator {}" + decoratorClass, e);
+            }
+	    }
+
+	    return decoratedSet;
 	}
 
 	public DataSetConfiguration getDataSetConfiguration() {

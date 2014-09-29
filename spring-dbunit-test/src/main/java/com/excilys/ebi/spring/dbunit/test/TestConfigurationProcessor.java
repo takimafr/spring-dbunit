@@ -158,6 +158,7 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 		.withTableType(annotation.tableType())/**/
 		.withQualifiedTableNames(annotation.qualifiedTableNames())/**/
 		.withSchema(annotation.schema())/**/
+		.withDecorators(annotation.decorators())
 		.build();
 	}
 
