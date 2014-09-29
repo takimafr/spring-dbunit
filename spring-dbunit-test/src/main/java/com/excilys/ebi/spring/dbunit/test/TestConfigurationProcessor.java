@@ -53,6 +53,10 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 
 	private final ConfigurationConventions conventions;
 
+	private boolean hasWarnedAboutNoDataSet;
+
+	private boolean hasWarnedAboutNoExpectedDataSet;
+
 	/**
 	 * A configuration cache used between setup and teardown
 	 */
@@ -97,7 +101,10 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 				configurationCache.put(testContext.getTestMethod(), configuration);
 
 			} else {
-				LOGGER.info("DataSetTestExecutionListener was configured but without any DataSet or DataSets! DataSet features are disabled");
+				if(!hasWarnedAboutNoDataSet) {
+					LOGGER.info("DataSetTestExecutionListener was configured but without any DataSet or DataSets! DataSet features are disabled");
+					hasWarnedAboutNoDataSet = true;
+				}
 			}
 		}
 
@@ -126,7 +133,10 @@ public class TestConfigurationProcessor implements ConfigurationProcessor<TestCo
 				expectedConfigurationCache.put(testContext.getTestMethod(), configuration);
 
 			} else {
-				LOGGER.info("DataSetTestExecutionListener was configured but without any ExpectedDataSet or ExpectedDataSets! ExpectedDataSet features are disabled");
+				if(!hasWarnedAboutNoExpectedDataSet) {
+					LOGGER.info("DataSetTestExecutionListener was configured but without any ExpectedDataSet or ExpectedDataSets! ExpectedDataSet features are disabled");
+					hasWarnedAboutNoExpectedDataSet = true;
+				}
 			}
 		}
 
