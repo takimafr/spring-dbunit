@@ -28,6 +28,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
 
 import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
+import com.excilys.ebi.spring.dbunit.dataset.DataSetDecorator;
 
 /**
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
@@ -50,6 +51,7 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 	private boolean skipOracleRecycleBinTables = ConfigurationDefaults.DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES;
 	private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
 	private String schema = ConfigurationDefaults.DEFAULT_SCHEMA;
+	private Class<? extends DataSetDecorator>[] decorators = null;
 
 	public IDataSet getDataSet() throws DataSetException, IOException {
 
@@ -166,6 +168,12 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 			if (!schema.isEmpty())
 				dataSetConfiguration.schema = schema;
 			return this;
+		}
+
+		public Builder withDecorators(Class<? extends DataSetDecorator>[] decorators) {
+		    if(decorators != null)
+		        dataSetConfiguration.decorators = decorators;
+		    return this;
 		}
 
 		public DataSetConfiguration build() throws DataSetException, IOException {
@@ -316,4 +324,12 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 	public void setSchema(String schema) {
 		this.schema = schema;
 	}
+
+    public Class<? extends DataSetDecorator>[] getDecorators() {
+        return decorators;
+    }
+
+    public void setDecorators(Class<? extends DataSetDecorator>[] decorators) {
+        this.decorators = decorators;
+    }
 }

@@ -24,11 +24,13 @@ import java.lang.annotation.Target;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.dataset.IDataSet;
+import org.springframework.core.DecoratingClassLoader;
 
 import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
 import com.excilys.ebi.spring.dbunit.config.DBOperation;
 import com.excilys.ebi.spring.dbunit.config.DBType;
 import com.excilys.ebi.spring.dbunit.config.DataSetFormat;
+import com.excilys.ebi.spring.dbunit.dataset.DataSetDecorator;
 
 /**
  * Indicates that a test class or a test method has to load and purge the
@@ -159,4 +161,9 @@ public @interface DataSet {
 	 * @return the schema
 	 */
 	String schema() default "";
+
+	/**
+	 * @return decorators to be applied on the dataset
+	 */
+	Class<? extends DataSetDecorator>[] decorators() default {};
 }
