@@ -24,12 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.dbunit.dataset.Column;
-import org.dbunit.dataset.stream.IDataSetProducer;
 import org.dbunit.dataset.xml.FlatDtdProducer;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import org.xml.sax.ext.DeclHandler;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * A FlatDtdProducer that use a LinkedHashMap instead of an HashMap to store
@@ -37,7 +33,7 @@ import org.xml.sax.ext.LexicalHandler;
  * 
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
-public class LinkedHashMapFlatDtdProducer extends FlatDtdProducer implements IDataSetProducer, EntityResolver, DeclHandler, LexicalHandler {
+public class LinkedHashMapFlatDtdProducer extends FlatDtdProducer {
 
 	public LinkedHashMapFlatDtdProducer() {
 		useLinkedHashMap();

@@ -122,7 +122,7 @@ public class FlyWeightFlatXmlDataSet extends CachedDataSet {
 	/**
 	 * Write the specified dataset to the specified writer as xml.
 	 */
-	public static void write(IDataSet dataSet, Writer writer) throws IOException, DataSetException {
+	public static void write(IDataSet dataSet, Writer writer) throws DataSetException {
 		logger.debug("write(dataSet={}, writer={}) - start", dataSet, writer);
 		write(dataSet, writer, null);
 	}
@@ -130,7 +130,7 @@ public class FlyWeightFlatXmlDataSet extends CachedDataSet {
 	/**
 	 * Write the specified dataset to the specified writer as xml.
 	 */
-	public static void write(IDataSet dataSet, Writer writer, String encoding) throws IOException, DataSetException {
+	public static void write(IDataSet dataSet, Writer writer, String encoding) throws DataSetException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("write(dataSet={}, writer={}, encoding={}) - start", new Object[] { dataSet, writer, encoding });
 		}

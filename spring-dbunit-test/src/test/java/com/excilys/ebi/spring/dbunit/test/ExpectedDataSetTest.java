@@ -53,7 +53,7 @@ public class ExpectedDataSetTest {
 
 		private static final long serialVersionUID = 1L;
 
-		public void setAttribute(String name, Object value) {				}
+		public void setAttribute(String name, Object value) { /* NO-OP */ }
 		public Object getAttribute(String name) {			return null;	}
 		public Object removeAttribute(String name) {		return null;	}
 		public boolean hasAttribute(String name) {			return false;	}
@@ -61,8 +61,8 @@ public class ExpectedDataSetTest {
 		public ApplicationContext getApplicationContext() {	return null;	}
 		public Object getTestInstance() {					return null;	}
 		public Throwable getTestException() {				return null;	}
-		public void markApplicationContextDirty(HierarchyMode hierarchyMode) {	}
-		public void updateState(Object testInstance, Method testMethod,	Throwable testException) {	}
+		public void markApplicationContextDirty(HierarchyMode hierarchyMode) { /* NO-OP */ }
+		public void updateState(Object testInstance, Method testMethod,	Throwable testException) { /* NO-OP */ }
 
 		private Class<?> testClass;
 		private Method testMethod;
@@ -79,11 +79,11 @@ public class ExpectedDataSetTest {
 	private static class ClassForTest {
 		@ExpectedDataSet
 		public void test() {
-			
+			/* NO-OP */
 		}
 		@ExpectedDataSet(value="ds.xml", schema="sch")
 		public void test1() {
-			
+			/* NO-OP */
 		}
 	}
 

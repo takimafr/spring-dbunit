@@ -27,7 +27,6 @@ import javax.sql.DataSource;
 import org.springframework.context.ApplicationContext;
 
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
-import com.excilys.ebi.spring.dbunit.config.DatabaseConnectionConfigurer;
 import com.excilys.ebi.spring.dbunit.config.Phase;
 
 /**
@@ -42,14 +41,14 @@ public class DefaultDataLoader implements DataLoader {
 			populator.setDataSetConfiguration(dataSetConfiguration);
 			populator.setPhase(phase);
 			DataSource dataSource = lookUpDataSource(context, dataSetConfiguration);
-			executeOperation(populator, dataSetConfiguration, dataSource);
+			executeOperation(populator, dataSource);
 		}
 	}
 
 	/**
 	 * Execute a DBUbit operation
 	 */
-	private void executeOperation(DbUnitDatabasePopulator populator, DatabaseConnectionConfigurer databaseConnectionConfigurer, DataSource dataSource) throws Exception {
+	private void executeOperation(DbUnitDatabasePopulator populator, DataSource dataSource) throws Exception {
 
 		Connection connection = null;
 

@@ -39,10 +39,10 @@ import org.dbunit.dataset.stream.DefaultConsumer;
 import org.dbunit.dataset.stream.IDataSetConsumer;
 import org.dbunit.dataset.stream.IDataSetProducer;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
+import org.dbunit.dataset.xml.FlatDtdProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -61,7 +61,7 @@ import com.excilys.ebi.spring.dbunit.dataset.xml.LinkedHashMapFlatDtdProducer;
  *
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
-public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSetProducer, ContentHandler {
+public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSetProducer {
 
 	/**
 	 * Logger for this class
@@ -360,8 +360,8 @@ public class FlyWeightFlatXmlProducer extends DefaultHandler implements IDataSet
 			XMLReader xmlReader = saxParserFactory.newSAXParser().getXMLReader();
 
 			if (_dtdHandler != null) {
-				FlatDtdHandler.setLexicalHandler(xmlReader, _dtdHandler);
-				FlatDtdHandler.setDeclHandler(xmlReader, _dtdHandler);
+				FlatDtdProducer.setLexicalHandler(xmlReader, _dtdHandler);
+				FlatDtdProducer.setDeclHandler(xmlReader, _dtdHandler);
 			}
 
 			xmlReader.setContentHandler(this);

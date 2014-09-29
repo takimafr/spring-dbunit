@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.dataset.IDataSet;
-import org.springframework.core.DecoratingClassLoader;
 
 import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
 import com.excilys.ebi.spring.dbunit.config.DBOperation;
