@@ -26,6 +26,7 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
 import com.excilys.ebi.spring.dbunit.dataset.DataSetDecorator;
@@ -107,7 +108,8 @@ public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 		}
 
 		public Builder withDbType(DBType dbType) {
-			dataSetConfiguration.dbType = dbType;
+			if(dbType != null)
+				dataSetConfiguration.dbType = dbType;
 			return this;
 		}
 

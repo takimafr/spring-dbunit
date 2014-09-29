@@ -23,7 +23,7 @@ public interface Constants {
 
 		public static final DBOperation DEFAULT_TEARDOWN_OPERATION = DBOperation.NONE;
 
-		public static final DBType DEFAULT_DB_TYPE = DBType.HSQLDB;
+		public static final DBType DEFAULT_DB_TYPE = DBType.valueOf(System.getProperty("spring.dbunit.dbtype", "HSQLDB"));
 
 		public static final DataSetFormat DEFAULT_DB_FORMAT = DataSetFormat.FLAT;
 
