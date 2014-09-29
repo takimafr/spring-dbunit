@@ -46,6 +46,6 @@ public class RollbackTransactionalDataSetTestExecutionListener extends DataSetTe
 
 	@Override
 	public void afterTestClass(TestContext testContext) throws Exception {
-		dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.TEARDOWN);
+		dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.ROLLBACK);
 	}
 }

@@ -36,9 +36,24 @@ public enum Phase {
 				return new CompositeOperation(databaseOperations);
 			}
 		}
-	}
-
-	,
+	},
+	ROLLBACK {
+		@Override
+		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
+			if (configuration.getTearDownOperation().length == 1) {
+				DBOperation op = configuration.getTearDownOperation()[0];
+				if (op == DBOperation.NONE)
+					op = DBOperation.DELETE_ALL;
+				return op.getDatabaseOperation();
+			} else {
+				DatabaseOperation[] databaseOperations = new DatabaseOperation[configuration.getTearDownOperation().length];
+				for (int i = 0; i < configuration.getTearDownOperation().length; i++) {
+					databaseOperations[i] = configuration.getTearDownOperation()[i].getDatabaseOperation();
+				}
+				return new CompositeOperation(databaseOperations);
+			}
+		}
+	},
 	TEARDOWN {
 		@Override
 		public DatabaseOperation getOperation(DataSetConfiguration configuration) {
