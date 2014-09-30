@@ -17,9 +17,6 @@ package com.excilys.ebi.spring.dbunit.config;
 
 import static com.excilys.ebi.spring.dbunit.utils.ApplicationContextUtils.getOptionalUniqueBeanOfType;
 
-import java.io.IOException;
-
-import org.dbunit.DatabaseUnitException;
 import org.springframework.context.ApplicationContext;
 
 import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
@@ -29,22 +26,25 @@ import com.excilys.ebi.spring.dbunit.ConfigurationProcessor;
  */
 public class ApplicationContextConfigurationProcessor implements ConfigurationProcessor<ApplicationContext> {
 
-	private DataSetConfiguration defaultConfiguration = new DataSetConfiguration();
-	private ExpectedDataSetConfiguration defaultExpectedConfiguration = new ExpectedDataSetConfiguration();
+    private DataSetConfiguration defaultConfiguration = new DataSetConfiguration();
 
-	public DataSetConfiguration getConfiguration(ApplicationContext applicationContext) throws IOException, DatabaseUnitException {
-		return getOptionalUniqueBeanOfType(applicationContext, DataSetConfiguration.class, defaultConfiguration);
-	}
+    private ExpectedDataSetConfiguration defaultExpectedConfiguration = new ExpectedDataSetConfiguration();
 
-	public DataSetConfiguration getDefaultConfiguration() {
-		return defaultConfiguration;
-	}
+    @Override
+    public DataSetConfiguration getConfiguration(ApplicationContext applicationContext) {
+        return getOptionalUniqueBeanOfType(applicationContext, DataSetConfiguration.class, defaultConfiguration);
+    }
 
-	public void setDefaultConfiguration(DataSetConfiguration defaultConfiguration) {
-		this.defaultConfiguration = defaultConfiguration;
-	}
+    public DataSetConfiguration getDefaultConfiguration() {
+        return defaultConfiguration;
+    }
 
-	public ExpectedDataSetConfiguration getExpectedConfiguration(ApplicationContext applicationContext) throws IOException, DatabaseUnitException {
-		return getOptionalUniqueBeanOfType(applicationContext, ExpectedDataSetConfiguration.class, defaultExpectedConfiguration);
-	}
+    public void setDefaultConfiguration(DataSetConfiguration defaultConfiguration) {
+        this.defaultConfiguration = defaultConfiguration;
+    }
+
+    @Override
+    public ExpectedDataSetConfiguration getExpectedConfiguration(ApplicationContext applicationContext) {
+        return getOptionalUniqueBeanOfType(applicationContext, ExpectedDataSetConfiguration.class, defaultExpectedConfiguration);
+    }
 }

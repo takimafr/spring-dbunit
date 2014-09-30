@@ -36,36 +36,40 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
  */
 public class DataLoaderListener implements ServletContextListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataLoaderListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataLoaderListener.class);
 
-	private DataLoader dataLoader = new DefaultDataLoader();
-	private ConfigurationProcessor<ApplicationContext> configurationProcessor = new ApplicationContextConfigurationProcessor();
+    private DataLoader dataLoader = new DefaultDataLoader();
 
-	private ApplicationContext context;
-	private DataSetConfiguration configuration;
+    private ConfigurationProcessor<ApplicationContext> configurationProcessor = new ApplicationContextConfigurationProcessor();
 
-	public void contextInitialized(ServletContextEvent sce) {
+    private ApplicationContext context;
 
-		context = getWebApplicationContext(sce.getServletContext());
+    private DataSetConfiguration configuration;
 
-		try {
-			configuration = configurationProcessor.getConfiguration(context);
-			dataLoader.execute(context, configuration, Phase.SETUP);
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
 
-		} catch (Exception e) {
-			LOGGER.error("Error while initializing DbUnit data", e);
-			throw new ExceptionInInitializerError(e);
-		}
-	}
+        context = getWebApplicationContext(sce.getServletContext());
 
-	public void contextDestroyed(ServletContextEvent sce) {
+        try {
+            configuration = configurationProcessor.getConfiguration(context);
+            dataLoader.execute(context, configuration, Phase.SETUP);
 
-		try {
-			dataLoader.execute(context, configuration, Phase.TEARDOWN);
+        } catch (Exception e) {
+            LOGGER.error("Error while initializing DbUnit data", e);
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
-		} catch (Exception e) {
-			LOGGER.error("Error while cleaning up DbUnit data", e);
-			throw new RuntimeException(e);
-		}
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+
+        try {
+            dataLoader.execute(context, configuration, Phase.TEARDOWN);
+
+        } catch (Exception e) {
+            LOGGER.error("Error while cleaning up DbUnit data", e);
+            throw new RuntimeException(e);
+        }
+    }
 }

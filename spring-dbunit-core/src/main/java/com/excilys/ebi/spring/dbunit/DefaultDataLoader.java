@@ -34,34 +34,35 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
  */
 public class DefaultDataLoader implements DataLoader {
 
-	public void execute(ApplicationContext context, DataSetConfiguration dataSetConfiguration, Phase phase) throws Exception {
+    @Override
+    public void execute(ApplicationContext context, DataSetConfiguration dataSetConfiguration, Phase phase) throws Exception {
 
-		if (dataSetConfiguration != null) {
-			DbUnitDatabasePopulator populator = new DbUnitDatabasePopulator();
-			populator.setDataSetConfiguration(dataSetConfiguration);
-			populator.setPhase(phase);
-			DataSource dataSource = lookUpDataSource(context, dataSetConfiguration);
-			executeOperation(populator, dataSource);
-		}
-	}
+        if (dataSetConfiguration != null) {
+            DbUnitDatabasePopulator populator = new DbUnitDatabasePopulator();
+            populator.setDataSetConfiguration(dataSetConfiguration);
+            populator.setPhase(phase);
+            DataSource dataSource = lookUpDataSource(context, dataSetConfiguration);
+            executeOperation(populator, dataSource);
+        }
+    }
 
-	/**
-	 * Execute a DBUbit operation
-	 */
-	private void executeOperation(DbUnitDatabasePopulator populator, DataSource dataSource) throws Exception {
+    /**
+     * Execute a DBUbit operation
+     */
+    private void executeOperation(DbUnitDatabasePopulator populator, DataSource dataSource) throws Exception {
 
-		Connection connection = null;
+        Connection connection = null;
 
-		try {
-			connection = getConnection(dataSource);
-			populator.populate(connection);
+        try {
+            connection = getConnection(dataSource);
+            populator.populate(connection);
 
-		} finally {
-			if (connection != null && !isConnectionTransactional(connection, dataSource)) {
-				// if the connection is transactional, closing it. Otherwise,
-				// expects that the framework will do it
-				releaseConnection(connection, dataSource);
-			}
-		}
-	}
+        } finally {
+            if (connection != null && !isConnectionTransactional(connection, dataSource)) {
+                // if the connection is transactional, closing it. Otherwise,
+                // expects that the framework will do it
+                releaseConnection(connection, dataSource);
+            }
+        }
+    }
 }

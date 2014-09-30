@@ -15,15 +15,12 @@
  */
 package com.excilys.ebi.spring.dbunit;
 
-import java.io.IOException;
-
-import org.dbunit.DatabaseUnitException;
-
 import com.excilys.ebi.spring.dbunit.config.DataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.config.ExpectedDataSetConfiguration;
 
 public interface ConfigurationProcessor<T> {
 
-	DataSetConfiguration getConfiguration(T context) throws IOException, DatabaseUnitException;
-	ExpectedDataSetConfiguration getExpectedConfiguration(T context) throws IOException, DatabaseUnitException;
+    DataSetConfiguration getConfiguration(T context);
+
+    ExpectedDataSetConfiguration getExpectedConfiguration(T context);
 }

@@ -39,48 +39,49 @@ import com.excilys.ebi.spring.dbunit.dataset.DataSetDecorator;
 
 public class DbUnitDatabasePopulator implements DatabasePopulator {
 
-	private static final Logger LOGGER = getLogger(DbUnitDatabasePopulator.class);
+    private static final Logger LOGGER = getLogger(DbUnitDatabasePopulator.class);
 
-	private DataSetConfiguration dataSetConfiguration;
+    private DataSetConfiguration dataSetConfiguration;
 
-	private Phase phase;
+    private Phase phase;
 
-	public void populate(Connection connection) throws SQLException {
+    @Override
+    public void populate(Connection connection) throws SQLException {
 
-		LOGGER.debug("populating");
+        LOGGER.debug("populating");
 
-		StopWatch sw = new StopWatch("DbUnitDatabasePopulator");
+        StopWatch sw = new StopWatch("DbUnitDatabasePopulator");
 
-		DatabaseOperation operation = phase.getOperation(dataSetConfiguration);
-		try {
-			IDataSet dataSet = decorateDataSetIfNeeded(dataSetConfiguration.getDataSet(), dataSetConfiguration.getDecorators());
-			String schema = dataSetConfiguration.getSchema();
-			DatabaseConnection databaseConnection = getDatabaseConnection(connection, schema, dataSetConfiguration);
-			sw.start("populating");
-			operation.execute(databaseConnection, dataSet);
-			sw.stop();
-			LOGGER.debug(sw.prettyPrint());
+        DatabaseOperation operation = phase.getOperation(dataSetConfiguration);
+        try {
+            IDataSet dataSet = decorateDataSetIfNeeded(dataSetConfiguration.getDataSet(), dataSetConfiguration.getDecorators());
+            String schema = dataSetConfiguration.getSchema();
+            DatabaseConnection databaseConnection = getDatabaseConnection(connection, schema, dataSetConfiguration);
+            sw.start("populating");
+            operation.execute(databaseConnection, dataSet);
+            sw.stop();
+            LOGGER.debug(sw.prettyPrint());
 
-		} catch (BatchUpdateException e) {
-			LOGGER.error("BatchUpdateException while loading dataset", e);
-			LOGGER.error("Caused by : ", e.getNextException());
-			throw e;
+        } catch (BatchUpdateException e) {
+            LOGGER.error("BatchUpdateException while loading dataset", e);
+            LOGGER.error("Caused by : ", e.getNextException());
+            throw e;
 
-		} catch (DatabaseUnitException e) {
-			throw new DbUnitException(e);
-		} catch (IOException e) {
-			throw new DbUnitException(e);
-		}
-	}
+        } catch (DatabaseUnitException e) {
+            throw new DbUnitException(e);
+        } catch (IOException e) {
+            throw new DbUnitException(e);
+        }
+    }
 
-	private IDataSet decorateDataSetIfNeeded(IDataSet dataSet, Class<? extends DataSetDecorator>[] decorators) {
-	    if(decorators == null || decorators.length == 0)
-	        return dataSet;
+    private IDataSet decorateDataSetIfNeeded(IDataSet dataSet, Class<? extends DataSetDecorator>[] decorators) {
+        if (decorators == null || decorators.length == 0)
+            return dataSet;
 
-	    ReplacementDataSet decoratedSet = new ReplacementDataSet(dataSet);
+        ReplacementDataSet decoratedSet = new ReplacementDataSet(dataSet);
 
-	    for(Class<? extends DataSetDecorator> decoratorClass : decorators) {
-	        try {
+        for (Class<? extends DataSetDecorator> decoratorClass : decorators) {
+            try {
                 DataSetDecorator decorator = decoratorClass.newInstance();
                 decoratedSet.addReplacementSubstring(decorator.getStringToReplace(), decorator.getStringReplacement());
             } catch (InstantiationException e) {
@@ -88,27 +89,27 @@ public class DbUnitDatabasePopulator implements DatabasePopulator {
             } catch (IllegalAccessException e) {
                 LOGGER.error("Could not instantiate DataSetDecorator {}" + decoratorClass, e);
             }
-	    }
+        }
 
-	    return decoratedSet;
-	}
+        return decoratedSet;
+    }
 
-	public DataSetConfiguration getDataSetConfiguration() {
-		return dataSetConfiguration;
-	}
+    public DataSetConfiguration getDataSetConfiguration() {
+        return dataSetConfiguration;
+    }
 
-	public Phase getPhase() {
-		return phase;
-	}
+    public Phase getPhase() {
+        return phase;
+    }
 
-	@Required
-	public void setDataSetConfiguration(DataSetConfiguration dataSetConfiguration) {
-		this.dataSetConfiguration = dataSetConfiguration;
-	}
+    @Required
+    public void setDataSetConfiguration(DataSetConfiguration dataSetConfiguration) {
+        this.dataSetConfiguration = dataSetConfiguration;
+    }
 
-	@Required
-	public void setPhase(Phase phase) {
-		this.phase = phase;
-	}
+    @Required
+    public void setPhase(Phase phase) {
+        this.phase = phase;
+    }
 
 }

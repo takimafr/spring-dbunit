@@ -49,126 +49,173 @@ import com.excilys.ebi.spring.dbunit.config.ExpectedDataSetConfiguration;
 @DataSet(dbType = DBType.H2)
 public class ExpectedDataSetTest {
 
-	private static class TestContextMock implements TestContext {
+    private static class TestContextMock implements TestContext {
 
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		public void setAttribute(String name, Object value) { /* NO-OP */ }
-		public Object getAttribute(String name) {			return null;	}
-		public Object removeAttribute(String name) {		return null;	}
-		public boolean hasAttribute(String name) {			return false;	}
-		public String[] attributeNames() {					return null;	}
-		public ApplicationContext getApplicationContext() {	return null;	}
-		public Object getTestInstance() {					return null;	}
-		public Throwable getTestException() {				return null;	}
-		public void markApplicationContextDirty(HierarchyMode hierarchyMode) { /* NO-OP */ }
-		public void updateState(Object testInstance, Method testMethod,	Throwable testException) { /* NO-OP */ }
+        @Override
+        public void setAttribute(String name, Object value) {
+            /* NO-OP */
+        }
 
-		private Class<?> testClass;
-		private Method testMethod;
-		
-		public TestContextMock(Class<?> testClass, Method testMethod) {
-			this.testClass = testClass;
-			this.testMethod = testMethod;
-		}
-		
-		public Class<?> getTestClass() {					return testClass;	}
-		public Method getTestMethod() {						return testMethod;	}
-	}
-	
-	private static class ClassForTest {
-		@ExpectedDataSet
-		public void test() {
-			/* NO-OP */
-		}
-		@ExpectedDataSet(value="ds.xml", schema="sch")
-		public void test1() {
-			/* NO-OP */
-		}
-	}
+        @Override
+        public Object getAttribute(String name) {
+            return null;
+        }
 
-	@Autowired
-	private IMyEntityDao myEntityDao;
-	
-	private ConfigurationProcessor<TestContext> configurationProcessor = new TestConfigurationProcessor();
-	
-	@Test
-	public void testExpectedDataSetConfiguration() throws NoSuchMethodException, SecurityException, IOException, DatabaseUnitException {
-		final Class<?> testClass = ClassForTest.class;
-		final Method testMethod = testClass.getMethod("test");
-		TestContext context = new TestContextMock(testClass, testMethod);
-		final ExpectedDataSetConfiguration configuration = configurationProcessor.getExpectedConfiguration(context);
-		assertArrayEquals(new String[] {"classpath:com/excilys/ebi/spring/dbunit/test/expectedDataSet.xml"}, configuration.getDataSetResourceLocations());
-		assertNull(configuration.getDataSourceSpringName());
-		assertEquals(DBType.HSQLDB, configuration.getDbType());
-		assertNull(configuration.getEscapePattern());
-		assertEquals(DataSetFormat.FLAT, configuration.getFormat());
-		assertNull(configuration.getFormatOptions().getDtdLocation());
-		assertFalse(configuration.getFormatOptions().isCaseSensitiveTableNames());
-		assertFalse(configuration.getFormatOptions().isColumnSensing());
-		assertFalse(configuration.getFormatOptions().isDtdMetadata());
-		assertNull(configuration.getSchema());
-		assertArrayEquals(new String[] {"TABLE"}, configuration.getTableType());
-	}
-	
-	@Test
-	public void testExpectedDataSetConfiguration1() throws NoSuchMethodException, SecurityException, IOException, DatabaseUnitException {
-		final Class<?> testClass = ClassForTest.class;
-		final Method testMethod = testClass.getMethod("test1");
-		TestContext context = new TestContextMock(testClass, testMethod);
-		final ExpectedDataSetConfiguration configuration = configurationProcessor.getExpectedConfiguration(context);
-		assertArrayEquals(new String[] {"classpath:com/excilys/ebi/spring/dbunit/test/ds.xml"}, configuration.getDataSetResourceLocations());
-		assertNull(configuration.getDataSourceSpringName());
-		assertEquals(DBType.HSQLDB, configuration.getDbType());
-		assertNull(configuration.getEscapePattern());
-		assertEquals(DataSetFormat.FLAT, configuration.getFormat());
-		assertNull(configuration.getFormatOptions().getDtdLocation());
-		assertFalse(configuration.getFormatOptions().isCaseSensitiveTableNames());
-		assertFalse(configuration.getFormatOptions().isColumnSensing());
-		assertFalse(configuration.getFormatOptions().isDtdMetadata());
-		assertEquals("sch", configuration.getSchema());
-		assertArrayEquals(new String[] {"TABLE"}, configuration.getTableType());
-		
-		IDataSet dataset = configuration.getDataSet();
-		assertEquals(1, dataset.getTableNames().length);
-		assertEquals("MY_ENTITY", dataset.getTableNames()[0]);
-		
-		ITableMetaData tableMetaData = dataset.getTableMetaData("MY_ENTITY");
-		
-		assertEquals(2, tableMetaData.getColumns().length);
-		assertEquals("ID", tableMetaData.getColumns()[0].getColumnName());
-		assertEquals("NAME", tableMetaData.getColumns()[1].getColumnName());
-		
-		ITable table = dataset.getTable("MY_ENTITY");
-		assertEquals(4, table.getRowCount());
-		assertEquals("id1", table.getValue(0, "ID"));
-		assertEquals("name1", table.getValue(0, "NAME"));
-		assertEquals("id2", table.getValue(1, "ID"));
-		assertEquals("name2", table.getValue(1, "NAME"));
-		assertEquals("id3", table.getValue(2, "ID"));
-		assertEquals("name3", table.getValue(2, "NAME"));
-		assertEquals("id4", table.getValue(3, "ID"));
-		assertEquals("name4", table.getValue(3, "NAME"));
-	}
+        @Override
+        public Object removeAttribute(String name) {
+            return null;
+        }
 
-	@Test
-	@DataSet
-	@ExpectedDataSet
-	public void testExpectedDataSet() {
-		myEntityDao.deleteById("id1");
-	}
+        @Override
+        public boolean hasAttribute(String name) {
+            return false;
+        }
 
-	@Test
-	@DataSet
-	@ExpectedDataSet(value="expectedDataSetWithColumnToIgnore.xml", columnsToIgnore="ID")
-	public void testExpectedDataSetWithColumnToIgnore() {
-		MyEntity myEntity = new MyEntity();
-		myEntity.setId("id6");
-		myEntity.setName("name6");
-		myEntityDao.saveOrUpdate(myEntity);
-		MyEntity myEntity2 = new MyEntity();
-		myEntity2.setId("id5");
-		myEntity2.setName("name5");
-		myEntityDao.saveOrUpdate(myEntity2);
-	}
+        @Override
+        public String[] attributeNames() {
+            return null;
+        }
+
+        @Override
+        public ApplicationContext getApplicationContext() {
+            return null;
+        }
+
+        @Override
+        public Object getTestInstance() {
+            return null;
+        }
+
+        @Override
+        public Throwable getTestException() {
+            return null;
+        }
+
+        @Override
+        public void markApplicationContextDirty(HierarchyMode hierarchyMode) {
+            /* NO-OP */
+        }
+
+        @Override
+        public void updateState(Object testInstance, Method testMethod, Throwable testException) { /* NO-OP */
+        }
+
+        private Class<?> testClass;
+
+        private Method testMethod;
+
+        public TestContextMock(Class<?> testClass, Method testMethod) {
+            this.testClass = testClass;
+            this.testMethod = testMethod;
+        }
+
+        @Override
+        public Class<?> getTestClass() {
+            return testClass;
+        }
+
+        @Override
+        public Method getTestMethod() {
+            return testMethod;
+        }
+    }
+
+    private static class ClassForTest {
+        @ExpectedDataSet
+        public void test() {
+            /* NO-OP */
+        }
+
+        @ExpectedDataSet(value = "ds.xml", schema = "sch")
+        public void test1() {
+            /* NO-OP */
+        }
+    }
+
+    @Autowired
+    private IMyEntityDao myEntityDao;
+
+    private ConfigurationProcessor<TestContext> configurationProcessor = new TestConfigurationProcessor();
+
+    @Test
+    public void testExpectedDataSetConfiguration() throws NoSuchMethodException, SecurityException {
+        final Class<?> testClass = ClassForTest.class;
+        final Method testMethod = testClass.getMethod("test");
+        TestContext context = new TestContextMock(testClass, testMethod);
+        final ExpectedDataSetConfiguration configuration = configurationProcessor.getExpectedConfiguration(context);
+        assertArrayEquals(new String[] { "classpath:com/excilys/ebi/spring/dbunit/test/expectedDataSet.xml" }, configuration.getDataSetResourceLocations());
+        assertNull(configuration.getDataSourceSpringName());
+        assertEquals(DBType.HSQLDB, configuration.getDbType());
+        assertNull(configuration.getEscapePattern());
+        assertEquals(DataSetFormat.FLAT, configuration.getFormat());
+        assertNull(configuration.getFormatOptions().getDtdLocation());
+        assertFalse(configuration.getFormatOptions().isCaseSensitiveTableNames());
+        assertFalse(configuration.getFormatOptions().isColumnSensing());
+        assertFalse(configuration.getFormatOptions().isDtdMetadata());
+        assertNull(configuration.getSchema());
+        assertArrayEquals(new String[] { "TABLE" }, configuration.getTableType());
+    }
+
+    @Test
+    public void testExpectedDataSetConfiguration1() throws NoSuchMethodException, SecurityException, IOException, DatabaseUnitException {
+        final Class<?> testClass = ClassForTest.class;
+        final Method testMethod = testClass.getMethod("test1");
+        TestContext context = new TestContextMock(testClass, testMethod);
+        final ExpectedDataSetConfiguration configuration = configurationProcessor.getExpectedConfiguration(context);
+        assertArrayEquals(new String[] { "classpath:com/excilys/ebi/spring/dbunit/test/ds.xml" }, configuration.getDataSetResourceLocations());
+        assertNull(configuration.getDataSourceSpringName());
+        assertEquals(DBType.HSQLDB, configuration.getDbType());
+        assertNull(configuration.getEscapePattern());
+        assertEquals(DataSetFormat.FLAT, configuration.getFormat());
+        assertNull(configuration.getFormatOptions().getDtdLocation());
+        assertFalse(configuration.getFormatOptions().isCaseSensitiveTableNames());
+        assertFalse(configuration.getFormatOptions().isColumnSensing());
+        assertFalse(configuration.getFormatOptions().isDtdMetadata());
+        assertEquals("sch", configuration.getSchema());
+        assertArrayEquals(new String[] { "TABLE" }, configuration.getTableType());
+
+        IDataSet dataset = configuration.getDataSet();
+        assertEquals(1, dataset.getTableNames().length);
+        assertEquals("MY_ENTITY", dataset.getTableNames()[0]);
+
+        ITableMetaData tableMetaData = dataset.getTableMetaData("MY_ENTITY");
+
+        assertEquals(2, tableMetaData.getColumns().length);
+        assertEquals("ID", tableMetaData.getColumns()[0].getColumnName());
+        assertEquals("NAME", tableMetaData.getColumns()[1].getColumnName());
+
+        ITable table = dataset.getTable("MY_ENTITY");
+        assertEquals(4, table.getRowCount());
+        assertEquals("id1", table.getValue(0, "ID"));
+        assertEquals("name1", table.getValue(0, "NAME"));
+        assertEquals("id2", table.getValue(1, "ID"));
+        assertEquals("name2", table.getValue(1, "NAME"));
+        assertEquals("id3", table.getValue(2, "ID"));
+        assertEquals("name3", table.getValue(2, "NAME"));
+        assertEquals("id4", table.getValue(3, "ID"));
+        assertEquals("name4", table.getValue(3, "NAME"));
+    }
+
+    @Test
+    @DataSet
+    @ExpectedDataSet
+    public void testExpectedDataSet() {
+        myEntityDao.deleteById("id1");
+    }
+
+    @Test
+    @DataSet
+    @ExpectedDataSet(value = "expectedDataSetWithColumnToIgnore.xml", columnsToIgnore = "ID")
+    public void testExpectedDataSetWithColumnToIgnore() {
+        MyEntity myEntity = new MyEntity();
+        myEntity.setId("id6");
+        myEntity.setName("name6");
+        myEntityDao.saveOrUpdate(myEntity);
+        MyEntity myEntity2 = new MyEntity();
+        myEntity2.setId("id5");
+        myEntity2.setName("name5");
+        myEntityDao.saveOrUpdate(myEntity2);
+    }
 }

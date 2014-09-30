@@ -26,7 +26,6 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
 import com.excilys.ebi.spring.dbunit.dataset.DataSetDecorator;
@@ -36,296 +35,313 @@ import com.excilys.ebi.spring.dbunit.dataset.DataSetDecorator;
  */
 public class DataSetConfiguration implements DatabaseConnectionConfigurer {
 
-	private boolean disabled;
-	private String dataSourceSpringName;
-	private DBOperation setUpOperation[] = new DBOperation[] { ConfigurationDefaults.DEFAULT_SETUP_OPERATION };
-	private DBOperation tearDownOperation[] = new DBOperation[] { ConfigurationDefaults.DEFAULT_TEARDOWN_OPERATION };
-	private DBType dbType = ConfigurationDefaults.DEFAULT_DB_TYPE;
-	private String[] dataSetResourceLocations = new String[] { "classpath:dataSet.xml" };
-	private DataSetFormat format = ConfigurationDefaults.DEFAULT_DB_FORMAT;
-	private DataSetFormatOptions formatOptions = new DataSetFormatOptions();
-	private String escapePattern = ConfigurationDefaults.DEFAULT_ESCAPE_PATTERN;
-	private int batchSize = ConfigurationDefaults.DEFAULT_BATCH_SIZE;
-	private int fetchSize = ConfigurationDefaults.DEFAULT_FETCH_SIZE;
-	private boolean qualifiedTableNames = ConfigurationDefaults.DEFAULT_QUALIFIED_TABLE_NAMES;
-	private boolean batchedStatements = ConfigurationDefaults.DEFAULT_BATCHED_STATEMENTS;
-	private boolean skipOracleRecycleBinTables = ConfigurationDefaults.DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES;
-	private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
-	private String schema = ConfigurationDefaults.DEFAULT_SCHEMA;
-	private Class<? extends DataSetDecorator>[] decorators = null;
+    private boolean disabled;
 
-	public IDataSet getDataSet() throws DataSetException, IOException {
+    private String dataSourceSpringName;
 
-		List<IDataSet> dataSets = format.loadMultiple(formatOptions, dataSetResourceLocations);
-		return dataSets.size() == 1 ? dataSets.get(0) : new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
-	}
+    private DBOperation setUpOperation[] = new DBOperation[] { ConfigurationDefaults.DEFAULT_SETUP_OPERATION };
 
-	public void configure(DatabaseConfig databaseConfig) {
+    private DBOperation tearDownOperation[] = new DBOperation[] { ConfigurationDefaults.DEFAULT_TEARDOWN_OPERATION };
 
-		Assert.notNull(dbType, "dbType is required");
+    private DBType dbType = ConfigurationDefaults.DEFAULT_DB_TYPE;
 
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dbType.getDataTypeFactory());
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, dbType.getMetadataHandler());
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN, escapePattern);
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_BATCH_SIZE, batchSize);
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_FETCH_SIZE, fetchSize);
-		databaseConfig.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, formatOptions.isCaseSensitiveTableNames());
-		databaseConfig.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
-		databaseConfig.setProperty(DatabaseConfig.FEATURE_BATCHED_STATEMENTS, batchedStatements);
-		databaseConfig.setProperty(DatabaseConfig.FEATURE_SKIP_ORACLE_RECYCLEBIN_TABLES, skipOracleRecycleBinTables);
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_TABLE_TYPE, tableType);
-	}
+    private String[] dataSetResourceLocations = new String[] { "classpath:dataSet.xml" };
 
-	public static Builder newDataSetConfiguration() {
-		return new Builder();
-	}
+    private DataSetFormat format = ConfigurationDefaults.DEFAULT_DB_FORMAT;
 
-	public static class Builder {
+    private DataSetFormatOptions formatOptions = new DataSetFormatOptions();
 
-		private DataSetConfiguration dataSetConfiguration = new DataSetConfiguration();
+    private String escapePattern = ConfigurationDefaults.DEFAULT_ESCAPE_PATTERN;
 
-		private Builder() {
-		}
+    private int batchSize = ConfigurationDefaults.DEFAULT_BATCH_SIZE;
 
-		public Builder withDisabled(boolean disabled) {
-			dataSetConfiguration.disabled = disabled;
-			return this;
-		}
+    private int fetchSize = ConfigurationDefaults.DEFAULT_FETCH_SIZE;
 
-		public Builder withDataSourceSpringName(String dataSourceSpringName) {
-			dataSetConfiguration.dataSourceSpringName = dataSourceSpringName;
-			return this;
-		}
+    private boolean qualifiedTableNames = ConfigurationDefaults.DEFAULT_QUALIFIED_TABLE_NAMES;
 
-		public Builder withSetUpOp(DBOperation[] setUpOp) {
-			dataSetConfiguration.setUpOperation = setUpOp;
-			return this;
-		}
+    private boolean batchedStatements = ConfigurationDefaults.DEFAULT_BATCHED_STATEMENTS;
 
-		public Builder withTearDownOp(DBOperation[] tearDownOp) {
-			dataSetConfiguration.tearDownOperation = tearDownOp;
-			return this;
-		}
+    private boolean skipOracleRecycleBinTables = ConfigurationDefaults.DEFAULT_SKIP_ORACLE_RECYCLEBIN_TABLES;
 
-		public Builder withDbType(DBType dbType) {
-			if(dbType != null)
-				dataSetConfiguration.dbType = dbType;
-			return this;
-		}
+    private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
 
-		public Builder withDataSetResourceLocations(String[] dataSetResourceLocations) {
-			dataSetConfiguration.dataSetResourceLocations = dataSetResourceLocations;
-			return this;
-		}
+    private String schema = ConfigurationDefaults.DEFAULT_SCHEMA;
 
-		public Builder withFormat(DataSetFormat format) {
-			dataSetConfiguration.format = format;
-			return this;
-		}
+    private Class<? extends DataSetDecorator>[] decorators = null;
 
-		public Builder withFormatOptions(DataSetFormatOptions formatOptions) {
-			dataSetConfiguration.formatOptions = formatOptions;
-			return this;
-		}
+    public IDataSet getDataSet() throws DataSetException, IOException {
 
-		public Builder withEscapePattern(String escapePattern) {
-			escapePattern = escapePattern.trim();
-			dataSetConfiguration.escapePattern = escapePattern.isEmpty() ? null : escapePattern;
-			return this;
-		}
+        List<IDataSet> dataSets = format.loadMultiple(formatOptions, dataSetResourceLocations);
+        return dataSets.size() == 1 ? dataSets.get(0) : new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
+    }
 
-		public Builder withBatchSize(int batchSize) {
-			dataSetConfiguration.batchSize = batchSize;
-			return this;
-		}
+    @Override
+    public void configure(DatabaseConfig databaseConfig) {
 
-		public Builder withFetchSize(int fetchSize) {
-			dataSetConfiguration.fetchSize = fetchSize;
-			return this;
-		}
+        Assert.notNull(dbType, "dbType is required");
 
-		public Builder withQualifiedTableNames(boolean qualifiedTableNames) {
-			dataSetConfiguration.qualifiedTableNames = qualifiedTableNames;
-			return this;
-		}
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dbType.getDataTypeFactory());
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, dbType.getMetadataHandler());
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN, escapePattern);
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_BATCH_SIZE, batchSize);
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_FETCH_SIZE, fetchSize);
+        databaseConfig.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, formatOptions.isCaseSensitiveTableNames());
+        databaseConfig.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
+        databaseConfig.setProperty(DatabaseConfig.FEATURE_BATCHED_STATEMENTS, batchedStatements);
+        databaseConfig.setProperty(DatabaseConfig.FEATURE_SKIP_ORACLE_RECYCLEBIN_TABLES, skipOracleRecycleBinTables);
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_TABLE_TYPE, tableType);
+    }
 
-		public Builder withBatchedStatements(boolean batchedStatements) {
-			dataSetConfiguration.batchedStatements = batchedStatements;
-			return this;
-		}
+    public static Builder newDataSetConfiguration() {
+        return new Builder();
+    }
 
-		public Builder withSkipOracleRecycleBinTables(boolean skipOracleRecycleBinTables) {
-			dataSetConfiguration.skipOracleRecycleBinTables = skipOracleRecycleBinTables;
-			return this;
-		}
+    public static class Builder {
 
-		public Builder withTableType(String[] tableType) {
-			if (tableType != null)
-				dataSetConfiguration.tableType = tableType;
-			return this;
-		}
+        private DataSetConfiguration dataSetConfiguration = new DataSetConfiguration();
 
-		public Builder withSchema(String schema) {
-			schema = schema.trim();
-			if (!schema.isEmpty())
-				dataSetConfiguration.schema = schema;
-			return this;
-		}
+        private Builder() {
+        }
 
-		public Builder withDecorators(Class<? extends DataSetDecorator>[] decorators) {
-		    if(decorators != null)
-		        dataSetConfiguration.decorators = decorators;
-		    return this;
-		}
+        public Builder withDisabled(boolean disabled) {
+            dataSetConfiguration.disabled = disabled;
+            return this;
+        }
 
-		public DataSetConfiguration build() throws DataSetException, IOException {
+        public Builder withDataSourceSpringName(String dataSourceSpringName) {
+            dataSetConfiguration.dataSourceSpringName = dataSourceSpringName;
+            return this;
+        }
 
-			Assert.notNull(dataSetConfiguration.dataSetResourceLocations, "dataSetResourceLocations is required");
-			Assert.notNull(dataSetConfiguration.setUpOperation, "setUpOperation is required");
-			Assert.notNull(dataSetConfiguration.tearDownOperation, "tearDownOperation is required");
-			Assert.notNull(dataSetConfiguration.dbType, "dbType is required");
-			Assert.notNull(dataSetConfiguration.format, "format is required");
-			Assert.notNull(dataSetConfiguration.formatOptions, "formatOptions are required");
+        public Builder withSetUpOp(DBOperation[] setUpOp) {
+            dataSetConfiguration.setUpOperation = setUpOp;
+            return this;
+        }
 
-			return dataSetConfiguration;
-		}
-	}
+        public Builder withTearDownOp(DBOperation[] tearDownOp) {
+            dataSetConfiguration.tearDownOperation = tearDownOp;
+            return this;
+        }
 
-	public String getDataSetResourceLocation() {
-		throw new UnsupportedOperationException();
-	}
+        public Builder withDbType(DBType dbType) {
+            if (dbType != null)
+                dataSetConfiguration.dbType = dbType;
+            return this;
+        }
 
-	public void setDataSetResourceLocation(String dataSetResourceLocation) {
-		this.dataSetResourceLocations = tokenizeToStringArray(dataSetResourceLocation, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-	}
+        public Builder withDataSetResourceLocations(String[] dataSetResourceLocations) {
+            dataSetConfiguration.dataSetResourceLocations = dataSetResourceLocations;
+            return this;
+        }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+        public Builder withFormat(DataSetFormat format) {
+            dataSetConfiguration.format = format;
+            return this;
+        }
 
-	public String getDataSourceSpringName() {
-		return dataSourceSpringName;
-	}
+        public Builder withFormatOptions(DataSetFormatOptions formatOptions) {
+            dataSetConfiguration.formatOptions = formatOptions;
+            return this;
+        }
 
-	public DBOperation[] getSetUpOperation() {
-		return setUpOperation;
-	}
+        public Builder withEscapePattern(String escapePattern) {
+            escapePattern = escapePattern.trim();
+            dataSetConfiguration.escapePattern = escapePattern.isEmpty() ? null : escapePattern;
+            return this;
+        }
 
-	public DBOperation[] getTearDownOperation() {
-		return tearDownOperation;
-	}
+        public Builder withBatchSize(int batchSize) {
+            dataSetConfiguration.batchSize = batchSize;
+            return this;
+        }
 
-	public DBType getDbType() {
-		return dbType;
-	}
+        public Builder withFetchSize(int fetchSize) {
+            dataSetConfiguration.fetchSize = fetchSize;
+            return this;
+        }
 
-	public String[] getDataSetResourceLocations() {
-		return dataSetResourceLocations;
-	}
+        public Builder withQualifiedTableNames(boolean qualifiedTableNames) {
+            dataSetConfiguration.qualifiedTableNames = qualifiedTableNames;
+            return this;
+        }
 
-	public DataSetFormat getFormat() {
-		return format;
-	}
+        public Builder withBatchedStatements(boolean batchedStatements) {
+            dataSetConfiguration.batchedStatements = batchedStatements;
+            return this;
+        }
 
-	public DataSetFormatOptions getFormatOptions() {
-		return formatOptions;
-	}
+        public Builder withSkipOracleRecycleBinTables(boolean skipOracleRecycleBinTables) {
+            dataSetConfiguration.skipOracleRecycleBinTables = skipOracleRecycleBinTables;
+            return this;
+        }
 
-	public String getEscapePattern() {
-		return escapePattern;
-	}
+        public Builder withTableType(String[] tableType) {
+            if (tableType != null)
+                dataSetConfiguration.tableType = tableType;
+            return this;
+        }
 
-	public int getBatchSize() {
-		return batchSize;
-	}
+        public Builder withSchema(String schema) {
+            schema = schema.trim();
+            if (!schema.isEmpty())
+                dataSetConfiguration.schema = schema;
+            return this;
+        }
 
-	public int getFetchSize() {
-		return fetchSize;
-	}
+        public Builder withDecorators(Class<? extends DataSetDecorator>[] decorators) {
+            if (decorators != null)
+                dataSetConfiguration.decorators = decorators;
+            return this;
+        }
 
-	public boolean isQualifiedTableNames() {
-		return qualifiedTableNames;
-	}
+        public DataSetConfiguration build() {
 
-	public boolean isBatchedStatements() {
-		return batchedStatements;
-	}
+            Assert.notNull(dataSetConfiguration.dataSetResourceLocations, "dataSetResourceLocations is required");
+            Assert.notNull(dataSetConfiguration.setUpOperation, "setUpOperation is required");
+            Assert.notNull(dataSetConfiguration.tearDownOperation, "tearDownOperation is required");
+            Assert.notNull(dataSetConfiguration.dbType, "dbType is required");
+            Assert.notNull(dataSetConfiguration.format, "format is required");
+            Assert.notNull(dataSetConfiguration.formatOptions, "formatOptions are required");
 
-	public boolean isSkipOracleRecycleBinTables() {
-		return skipOracleRecycleBinTables;
-	}
+            return dataSetConfiguration;
+        }
+    }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+    public String getDataSetResourceLocation() {
+        throw new UnsupportedOperationException();
+    }
 
-	public void setDataSourceSpringName(String dataSourceSpringName) {
-		this.dataSourceSpringName = dataSourceSpringName;
-	}
+    public void setDataSetResourceLocation(String dataSetResourceLocation) {
+        this.dataSetResourceLocations = tokenizeToStringArray(dataSetResourceLocation, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+    }
 
-	public void setSetUpOperation(DBOperation[] setUpOperation) {
-		this.setUpOperation = setUpOperation;
-	}
+    public boolean isDisabled() {
+        return disabled;
+    }
 
-	public void setTearDownOperation(DBOperation[] tearDownOperation) {
-		this.tearDownOperation = tearDownOperation;
-	}
+    public String getDataSourceSpringName() {
+        return dataSourceSpringName;
+    }
 
-	public void setDbType(DBType dbType) {
-		this.dbType = dbType;
-	}
+    public DBOperation[] getSetUpOperation() {
+        return setUpOperation;
+    }
 
-	public void setDataSetResourceLocations(String[] dataSetResourceLocations) {
-		this.dataSetResourceLocations = dataSetResourceLocations;
-	}
+    public DBOperation[] getTearDownOperation() {
+        return tearDownOperation;
+    }
 
-	public void setFormat(DataSetFormat format) {
-		this.format = format;
-	}
+    public DBType getDbType() {
+        return dbType;
+    }
 
-	public void setFormatOptions(DataSetFormatOptions formatOptions) {
-		this.formatOptions = formatOptions;
-	}
+    public String[] getDataSetResourceLocations() {
+        return dataSetResourceLocations;
+    }
 
-	public void setEscapePattern(String escapePattern) {
-		this.escapePattern = escapePattern;
-	}
+    public DataSetFormat getFormat() {
+        return format;
+    }
 
-	public void setBatchSize(int batchSize) {
-		this.batchSize = batchSize;
-	}
+    public DataSetFormatOptions getFormatOptions() {
+        return formatOptions;
+    }
 
-	public void setFetchSize(int fetchSize) {
-		this.fetchSize = fetchSize;
-	}
+    public String getEscapePattern() {
+        return escapePattern;
+    }
 
-	public void setQualifiedTableNames(boolean qualifiedTableNames) {
-		this.qualifiedTableNames = qualifiedTableNames;
-	}
+    public int getBatchSize() {
+        return batchSize;
+    }
 
-	public void setBatchedStatements(boolean batchedStatements) {
-		this.batchedStatements = batchedStatements;
-	}
+    public int getFetchSize() {
+        return fetchSize;
+    }
 
-	public void setSkipOracleRecycleBinTables(boolean skipOracleRecycleBinTables) {
-		this.skipOracleRecycleBinTables = skipOracleRecycleBinTables;
-	}
+    public boolean isQualifiedTableNames() {
+        return qualifiedTableNames;
+    }
 
-	public String[] getTableType() {
-		return tableType;
-	}
+    public boolean isBatchedStatements() {
+        return batchedStatements;
+    }
 
-	public void setTableType(String[] tableType) {
-		this.tableType = tableType;
-	}
+    public boolean isSkipOracleRecycleBinTables() {
+        return skipOracleRecycleBinTables;
+    }
 
-	public String getSchema() {
-		return schema;
-	}
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
+    public void setDataSourceSpringName(String dataSourceSpringName) {
+        this.dataSourceSpringName = dataSourceSpringName;
+    }
+
+    public void setSetUpOperation(DBOperation[] setUpOperation) {
+        this.setUpOperation = setUpOperation;
+    }
+
+    public void setTearDownOperation(DBOperation[] tearDownOperation) {
+        this.tearDownOperation = tearDownOperation;
+    }
+
+    public void setDbType(DBType dbType) {
+        this.dbType = dbType;
+    }
+
+    public void setDataSetResourceLocations(String[] dataSetResourceLocations) {
+        this.dataSetResourceLocations = dataSetResourceLocations;
+    }
+
+    public void setFormat(DataSetFormat format) {
+        this.format = format;
+    }
+
+    public void setFormatOptions(DataSetFormatOptions formatOptions) {
+        this.formatOptions = formatOptions;
+    }
+
+    public void setEscapePattern(String escapePattern) {
+        this.escapePattern = escapePattern;
+    }
+
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
+    }
+
+    public void setFetchSize(int fetchSize) {
+        this.fetchSize = fetchSize;
+    }
+
+    public void setQualifiedTableNames(boolean qualifiedTableNames) {
+        this.qualifiedTableNames = qualifiedTableNames;
+    }
+
+    public void setBatchedStatements(boolean batchedStatements) {
+        this.batchedStatements = batchedStatements;
+    }
+
+    public void setSkipOracleRecycleBinTables(boolean skipOracleRecycleBinTables) {
+        this.skipOracleRecycleBinTables = skipOracleRecycleBinTables;
+    }
+
+    public String[] getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(String[] tableType) {
+        this.tableType = tableType;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
 
     public Class<? extends DataSetDecorator>[] getDecorators() {
         return decorators;

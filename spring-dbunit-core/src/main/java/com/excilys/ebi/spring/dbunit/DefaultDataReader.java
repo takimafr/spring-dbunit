@@ -25,12 +25,13 @@ import com.excilys.ebi.spring.dbunit.config.ExpectedDataSetConfiguration;
 
 public class DefaultDataReader implements DataReader {
 
-	public IDataSet execute(ApplicationContext applicationContext, ExpectedDataSetConfiguration expectedDataSetConfiguration, String tableName) throws Exception {
-		if (expectedDataSetConfiguration != null) {
-			DatabaseConnection databaseConnection = getDatabaseConnection(applicationContext, expectedDataSetConfiguration);
-			return databaseConnection.createDataSet(new String[]{tableName});
-		}
-		return null;
-	}
+    @Override
+    public IDataSet execute(ApplicationContext applicationContext, ExpectedDataSetConfiguration expectedDataSetConfiguration, String tableName) throws Exception {
+        if (expectedDataSetConfiguration != null) {
+            DatabaseConnection databaseConnection = getDatabaseConnection(applicationContext, expectedDataSetConfiguration);
+            return databaseConnection.createDataSet(new String[] { tableName });
+        }
+        return null;
+    }
 
 }

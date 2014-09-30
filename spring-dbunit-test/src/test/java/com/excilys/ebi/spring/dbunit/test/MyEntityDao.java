@@ -15,7 +15,6 @@
  */
 package com.excilys.ebi.spring.dbunit.test;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -35,45 +34,53 @@ import org.springframework.util.Assert;
 @Repository
 public class MyEntityDao extends HibernateDaoSupport implements IMyEntityDao {
 
-	@Autowired
-	public MyEntityDao(SessionFactory sessionFactory) {
-		setSessionFactory(sessionFactory);
-	}
+    @Autowired
+    public MyEntityDao(SessionFactory sessionFactory) {
+        setSessionFactory(sessionFactory);
+    }
 
-	public List<MyEntity> loadAll() {
-		return getHibernateTemplate().loadAll(MyEntity.class);
-	}
+    @Override
+    public List<MyEntity> loadAll() {
+        return getHibernateTemplate().loadAll(MyEntity.class);
+    }
 
-	public MyEntity getById(String id) {
-		Assert.hasText(id, "id required");
-		return getHibernateTemplate().get(MyEntity.class, id);
-	}
+    @Override
+    public MyEntity getById(String id) {
+        Assert.hasText(id, "id required");
+        return getHibernateTemplate().get(MyEntity.class, id);
+    }
 
-	public MyEntity getByName(final String name) {
-		Assert.hasText(name, "name required");
-		return getHibernateTemplate().execute(new HibernateCallback<MyEntity>() {
-			public MyEntity doInHibernate(Session session) throws HibernateException, SQLException {
-				return (MyEntity) session.createQuery("from " + MyEntity.class.getName() + " where name=:name").setString("name", name).uniqueResult();
-			}
-		});
-	}
+    @Override
+    public MyEntity getByName(final String name) {
+        Assert.hasText(name, "name required");
+        return getHibernateTemplate().execute(new HibernateCallback<MyEntity>() {
+            @Override
+            public MyEntity doInHibernate(Session session) throws HibernateException {
+                return (MyEntity) session.createQuery("from " + MyEntity.class.getName() + " where name=:name").setString("name", name).uniqueResult();
+            }
+        });
+    }
 
-	public void saveOrUpdate(MyEntity entity) {
-		Assert.notNull(entity, "entity required");
-		getHibernateTemplate().saveOrUpdate(entity);
-	}
+    @Override
+    public void saveOrUpdate(MyEntity entity) {
+        Assert.notNull(entity, "entity required");
+        getHibernateTemplate().saveOrUpdate(entity);
+    }
 
-	public void delete(MyEntity entity) {
-		Assert.notNull(entity, "entity required");
-		getHibernateTemplate().delete(entity);
-	}
+    @Override
+    public void delete(MyEntity entity) {
+        Assert.notNull(entity, "entity required");
+        getHibernateTemplate().delete(entity);
+    }
 
-	public void deleteById(final String id) {
-		Assert.hasText(id, "id required");
-		getHibernateTemplate().execute(new HibernateCallback<Integer>() {
-			public Integer doInHibernate(Session session) throws HibernateException, SQLException {
-				return session.createQuery("delete from " + MyEntity.class.getName() + " where id=:id").setString("id", id).executeUpdate();
-			}
-		});
-	}
+    @Override
+    public void deleteById(final String id) {
+        Assert.hasText(id, "id required");
+        getHibernateTemplate().execute(new HibernateCallback<Integer>() {
+            @Override
+            public Integer doInHibernate(Session session) throws HibernateException {
+                return session.createQuery("delete from " + MyEntity.class.getName() + " where id=:id").setString("id", id).executeUpdate();
+            }
+        });
+    }
 }

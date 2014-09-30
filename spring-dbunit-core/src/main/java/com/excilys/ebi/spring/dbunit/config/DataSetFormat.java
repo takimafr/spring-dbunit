@@ -44,136 +44,136 @@ import com.excilys.ebi.spring.dbunit.dataset.xml.flyweight.FlyWeightFlatXmlDataS
  */
 public enum DataSetFormat {
 
-	/**
-	 * @see {@link FlatXmlDataSet}.
-	 */
-	FLYWEIGHT_FLAT {
+    /**
+     * @see {@link FlatXmlDataSet}.
+     */
+    FLYWEIGHT_FLAT {
 
-		/**
-		 * {@inheritDoc}
-		 */
-		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			FlyWeightFlatXmlDataSetBuilder builder = new FlyWeightFlatXmlDataSetBuilder();
-			builder.setColumnSensing(options.isColumnSensing());
-			builder.setDtdMetadata(options.isDtdMetadata());
-			builder.setCaseSensitiveTableNames(options.isCaseSensitiveTableNames());
-			if (StringUtils.hasText(options.getDtdLocation())) {
-				IDataSet metaDataSet = FLAT_DTD.loadUnique(null, options.getDtdLocation());
-				builder.setMetaDataSet(metaDataSet);
-			}
-			return builder.build(resource.getInputStream());
-		}
-	},
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+            FlyWeightFlatXmlDataSetBuilder builder = new FlyWeightFlatXmlDataSetBuilder();
+            builder.setColumnSensing(options.isColumnSensing());
+            builder.setDtdMetadata(options.isDtdMetadata());
+            builder.setCaseSensitiveTableNames(options.isCaseSensitiveTableNames());
+            if (StringUtils.hasText(options.getDtdLocation())) {
+                IDataSet metaDataSet = FLAT_DTD.loadUnique(null, options.getDtdLocation());
+                builder.setMetaDataSet(metaDataSet);
+            }
+            return builder.build(resource.getInputStream());
+        }
+    },
 
-	/**
-	 * @see {@link FlatXmlDataSet}.
-	 */
-	FLAT {
+    /**
+     * @see {@link FlatXmlDataSet}.
+     */
+    FLAT {
 
-		/**
-		 * {@inheritDoc}
-		 */
-		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-			builder.setColumnSensing(options.isColumnSensing());
-			builder.setDtdMetadata(options.isDtdMetadata());
-			builder.setCaseSensitiveTableNames(options.isCaseSensitiveTableNames());
-			if (StringUtils.hasText(options.getDtdLocation())) {
-				IDataSet metaDataSet = FLAT_DTD.loadUnique(null, options.getDtdLocation());
-				builder.setMetaDataSet(metaDataSet);
-			}
-			return builder.build(resource.getInputStream());
-		}
-	},
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+            FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+            builder.setColumnSensing(options.isColumnSensing());
+            builder.setDtdMetadata(options.isDtdMetadata());
+            builder.setCaseSensitiveTableNames(options.isCaseSensitiveTableNames());
+            if (StringUtils.hasText(options.getDtdLocation())) {
+                IDataSet metaDataSet = FLAT_DTD.loadUnique(null, options.getDtdLocation());
+                builder.setMetaDataSet(metaDataSet);
+            }
+            return builder.build(resource.getInputStream());
+        }
+    },
 
-	/**
-	 * @see {@link XmlDataSet}.
-	 */
-	XML {
+    /**
+     * @see {@link XmlDataSet}.
+     */
+    XML {
 
-		/**
-		 * {@inheritDoc}
-		 */
-		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new XmlDataSet(resource.getInputStream());
-		}
-	},
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+            return new XmlDataSet(resource.getInputStream());
+        }
+    },
 
-	/**
-	 * @see {@link StreamingXmlDataSet}.
-	 */
-	STREAMING {
+    /**
+     * @see {@link StreamingXmlDataSet}.
+     */
+    STREAMING {
 
-		/**
-		 * {@inheritDoc}
-		 */
-		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new StreamingDataSet(new XmlProducer(new InputSource(resource.getInputStream())));
-		}
-	},
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws IOException {
+            return new StreamingDataSet(new XmlProducer(new InputSource(resource.getInputStream())));
+        }
+    },
 
-	/**
-	 * @see {@link FlatDtdDataSet}.
-	 */
-	FLAT_DTD {
+    /**
+     * @see {@link FlatDtdDataSet}.
+     */
+    FLAT_DTD {
 
-		@Override
-		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new FlatDtdDataSet(new LinkedHashMapFlatDtdProducer(new InputSource(resource.getInputStream())));
-		}
-	},
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+            return new FlatDtdDataSet(new LinkedHashMapFlatDtdProducer(new InputSource(resource.getInputStream())));
+        }
+    },
 
-	/**
-	 * @see {@link CsvDataSet}.
-	 */
-	CSV {
-		@Override
-		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new CsvDataSet(resource.getFile());
-		}
-	},
+    /**
+     * @see {@link CsvDataSet}.
+     */
+    CSV {
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+            return new CsvDataSet(resource.getFile());
+        }
+    },
 
-	/**
-	 * @see {@link CsvDataSet}.
-	 */
-	XLS {
-		@Override
-		protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
-			return new XlsDataSet(resource.getFile());
-		}
-	};
+    /**
+     * @see {@link CsvDataSet}.
+     */
+    XLS {
+        @Override
+        protected IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException {
+            return new XlsDataSet(resource.getFile());
+        }
+    };
 
-	private static final ResourcePatternResolver RESOURCE_LOADER = new PathMatchingResourcePatternResolver();
+    private static final ResourcePatternResolver RESOURCE_LOADER = new PathMatchingResourcePatternResolver();
 
-	/**
-	 * Returns a {@link IDataSet dataset} with the format for this enum
-	 * 
-	 * @param the
-	 *            data file {@link InputStream}
-	 * @param options
-	 *            ths options
-	 * @return a {@link IDataSet dataset}
-	 * @throws DataSetException
-	 *             DBUnit failure
-	 * @throws IOException
-	 *             I/O failure
-	 */
-	protected abstract IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException;
+    /**
+     * Returns a {@link IDataSet dataset} with the format for this enum
+     * 
+     * @param the data file {@link InputStream}
+     * @param options ths options
+     * @return a {@link IDataSet dataset}
+     * @throws DataSetException DBUnit failure
+     * @throws IOException I/O failure
+     */
+    protected abstract IDataSet fromResource(Resource resource, DataSetFormatOptions options) throws DataSetException, IOException;
 
-	public IDataSet loadUnique(DataSetFormatOptions options, String location) throws DataSetException, IOException {
-		Resource resource = RESOURCE_LOADER.getResource(location);
-		return fromResource(resource, options);
-	}
+    public IDataSet loadUnique(DataSetFormatOptions options, String location) throws DataSetException, IOException {
+        Resource resource = RESOURCE_LOADER.getResource(location);
+        return fromResource(resource, options);
+    }
 
-	public List<IDataSet> loadMultiple(DataSetFormatOptions options, String[] locations) throws DataSetException, IOException {
+    public List<IDataSet> loadMultiple(DataSetFormatOptions options, String[] locations) throws DataSetException, IOException {
 
-		List<IDataSet> dataSets = new ArrayList<IDataSet>(locations.length);
-		for (String location : locations) {
-			Resource[] resources = RESOURCE_LOADER.getResources(location);
-			for (Resource resource : resources) {
-				dataSets.add(fromResource(resource, options));
-			}
-		}
-		return dataSets;
-	}
+        List<IDataSet> dataSets = new ArrayList<IDataSet>(locations.length);
+        for (String location : locations) {
+            Resource[] resources = RESOURCE_LOADER.getResources(location);
+            for (Resource resource : resources) {
+                dataSets.add(fromResource(resource, options));
+            }
+        }
+        return dataSets;
+    }
 }

@@ -27,7 +27,6 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.dataset.DataSetException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -46,206 +45,192 @@ import com.excilys.ebi.spring.dbunit.test.conventions.DefaultConfigurationConven
  */
 public class TestConfigurationProcessor implements ConfigurationProcessor<TestContext> {
 
-	/**
-	 * The logger
-	 */
-	protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    /**
+     * The logger
+     */
+    protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private final ConfigurationConventions conventions;
+    private final ConfigurationConventions conventions;
 
-	private boolean hasWarnedAboutNoDataSet;
+    private boolean hasWarnedAboutNoDataSet;
 
-	private boolean hasWarnedAboutNoExpectedDataSet;
+    private boolean hasWarnedAboutNoExpectedDataSet;
 
-	/**
-	 * A configuration cache used between setup and teardown
-	 */
-	protected final Map<Method, DataSetConfiguration> configurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, DataSetConfiguration>());
-	protected final Map<Method, ExpectedDataSetConfiguration> expectedConfigurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, ExpectedDataSetConfiguration>());
+    /**
+     * A configuration cache used between setup and teardown
+     */
+    protected final Map<Method, DataSetConfiguration> configurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, DataSetConfiguration>());
 
-	/**
-	 * Configure with default conventions
-	 */
-	public TestConfigurationProcessor() {
-		conventions = new DefaultConfigurationConventions();
-	}
+    protected final Map<Method, ExpectedDataSetConfiguration> expectedConfigurationCache = Collections.synchronizedMap(new IdentityHashMap<Method, ExpectedDataSetConfiguration>());
 
-	/**
-	 * Configure with custom conventions
-	 * 
-	 * @param conventions
-	 */
-	public TestConfigurationProcessor(ConfigurationConventions conventions) {
-		this.conventions = conventions;
-	}
+    /**
+     * Configure with default conventions
+     */
+    public TestConfigurationProcessor() {
+        conventions = new DefaultConfigurationConventions();
+    }
 
-	/**
-	 * @param testContext
-	 *            the context
-	 * @return the configuration
-	 * @throws IOException
-	 *             I/O failureDataSet
-	 * @throws DatabaseUnitException
-	 *             DBUnit failure
-	 */
-	public DataSetConfiguration getConfiguration(TestContext testContext) throws IOException, DatabaseUnitException {
+    /**
+     * Configure with custom conventions
+     * 
+     * @param conventions
+     */
+    public TestConfigurationProcessor(ConfigurationConventions conventions) {
+        this.conventions = conventions;
+    }
 
-		DataSetConfiguration configuration = configurationCache.get(testContext.getTestMethod());
+    /**
+     * @param testContext the context
+     * @return the configuration
+     * @throws IOException I/O failureDataSet
+     * @throws DatabaseUnitException DBUnit failure
+     */
+    @Override
+    public DataSetConfiguration getConfiguration(TestContext testContext) {
 
-		if (configuration == null) {
-			// no cached configuration --> instancing it
-			DataSet dataSetAnnotation = findAnnotation(testContext.getTestMethod(), testContext.getTestClass(), DataSet.class);
+        DataSetConfiguration configuration = configurationCache.get(testContext.getTestMethod());
 
-			if (dataSetAnnotation != null) {
-				configuration = buildConfiguration(dataSetAnnotation, testContext);
-				configurationCache.put(testContext.getTestMethod(), configuration);
+        if (configuration == null) {
+            // no cached configuration --> instancing it
+            DataSet dataSetAnnotation = findAnnotation(testContext.getTestMethod(), testContext.getTestClass(), DataSet.class);
 
-			} else {
-				if(!hasWarnedAboutNoDataSet) {
-					LOGGER.info("DataSetTestExecutionListener was configured but without any DataSet or DataSets! DataSet features are disabled");
-					hasWarnedAboutNoDataSet = true;
-				}
-			}
-		}
+            if (dataSetAnnotation != null) {
+                configuration = buildConfiguration(dataSetAnnotation, testContext);
+                configurationCache.put(testContext.getTestMethod(), configuration);
 
-		return configuration;
-	}
+            } else {
+                if (!hasWarnedAboutNoDataSet) {
+                    LOGGER.info("DataSetTestExecutionListener was configured but without any DataSet or DataSets! DataSet features are disabled");
+                    hasWarnedAboutNoDataSet = true;
+                }
+            }
+        }
 
-	/**
-	 * @param testContext
-	 *            the context
-	 * @return the configuration
-	 * @throws IOException
-	 *             I/O failureDataSet
-	 * @throws DatabaseUnitException
-	 *             DBUnit failure
-	 */
-	public ExpectedDataSetConfiguration getExpectedConfiguration(TestContext testContext) throws IOException, DatabaseUnitException {
+        return configuration;
+    }
 
-		ExpectedDataSetConfiguration configuration = expectedConfigurationCache.get(testContext.getTestMethod());
+    /**
+     * @param testContext the context
+     * @return the configuration
+     * @throws IOException I/O failureDataSet
+     * @throws DatabaseUnitException DBUnit failure
+     */
+    @Override
+    public ExpectedDataSetConfiguration getExpectedConfiguration(TestContext testContext) {
 
-		if (configuration == null) {
-			// no cached configuration --> instancing it
-			ExpectedDataSet expectedDataSetAnnotation = findAnnotation(testContext.getTestMethod(), testContext.getTestClass(), ExpectedDataSet.class);
+        ExpectedDataSetConfiguration configuration = expectedConfigurationCache.get(testContext.getTestMethod());
 
-			if (expectedDataSetAnnotation != null) {
-				configuration = buildExpectedConfiguration(expectedDataSetAnnotation, testContext);
-				expectedConfigurationCache.put(testContext.getTestMethod(), configuration);
+        if (configuration == null) {
+            // no cached configuration --> instancing it
+            ExpectedDataSet expectedDataSetAnnotation = findAnnotation(testContext.getTestMethod(), testContext.getTestClass(), ExpectedDataSet.class);
 
-			} else {
-				if(!hasWarnedAboutNoExpectedDataSet) {
-					LOGGER.info("DataSetTestExecutionListener was configured but without any ExpectedDataSet or ExpectedDataSets! ExpectedDataSet features are disabled");
-					hasWarnedAboutNoExpectedDataSet = true;
-				}
-			}
-		}
+            if (expectedDataSetAnnotation != null) {
+                configuration = buildExpectedConfiguration(expectedDataSetAnnotation, testContext);
+                expectedConfigurationCache.put(testContext.getTestMethod(), configuration);
 
-		return configuration;
-	}
+            } else {
+                if (!hasWarnedAboutNoExpectedDataSet) {
+                    LOGGER.info("DataSetTestExecutionListener was configured but without any ExpectedDataSet or ExpectedDataSets! ExpectedDataSet features are disabled");
+                    hasWarnedAboutNoExpectedDataSet = true;
+                }
+            }
+        }
 
-	protected final DataSetConfiguration buildConfiguration(DataSet annotation, TestContext testContext) throws DataSetException, IOException {
+        return configuration;
+    }
 
-		String[] dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
+    protected final DataSetConfiguration buildConfiguration(DataSet annotation, TestContext testContext) {
 
-		return newDataSetConfiguration()/**/
-		.withBatchedStatements(annotation.batchedStatements())/**/
-		.withBatchSize(annotation.batchSize())/**/
-		.withDataSetResourceLocations(dataSetResourceLocations)/**/
-		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
-		.withDbType(annotation.dbType())/**/
-		.withEscapePattern(annotation.escapePattern())/**/
-		.withFetchSize(annotation.fetchSize())/**/
-		.withFormat(annotation.format())/**/
-		.withFormatOptions(newFormatOptions()//
-				.withColumnSensing(annotation.columnSensing())//
-				.withDtdLocation(StringUtils.hasText(annotation.dtdLocation()) ? annotation.dtdLocation() : null)//
-				.withDtdMetadata(annotation.dtdMetadata())//
-				.withCaseSensitiveTableNames(annotation.caseSensitiveTableNames())//
-				.build())/**/
-		.withSetUpOp(annotation.setUpOperation())/**/
-		.withSkipOracleRecycleBinTables(annotation.skipOracleRecycleBinTables())/**/
-		.withTearDownOp(annotation.tearDownOperation())/**/
-		.withTableType(annotation.tableType())/**/
-		.withQualifiedTableNames(annotation.qualifiedTableNames())/**/
-		.withSchema(annotation.schema())/**/
-		.withDecorators(annotation.decorators())
-		.build();
-	}
+        String[] dataSetResourceLocations = getResourceLocationsByConventions(annotation, testContext);
 
-	protected final ExpectedDataSetConfiguration buildExpectedConfiguration(ExpectedDataSet annotation, TestContext testContext) throws DataSetException, IOException {
+        return newDataSetConfiguration()/**/
+        .withBatchedStatements(annotation.batchedStatements())/**/
+        .withBatchSize(annotation.batchSize())/**/
+        .withDataSetResourceLocations(dataSetResourceLocations)/**/
+        .withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
+        .withDbType(annotation.dbType())/**/
+        .withEscapePattern(annotation.escapePattern())/**/
+        .withFetchSize(annotation.fetchSize())/**/
+        .withFormat(annotation.format())/**/
+        .withFormatOptions(newFormatOptions()//
+                .withColumnSensing(annotation.columnSensing())//
+                .withDtdLocation(StringUtils.hasText(annotation.dtdLocation()) ? annotation.dtdLocation() : null)//
+                .withDtdMetadata(annotation.dtdMetadata())//
+                .withCaseSensitiveTableNames(annotation.caseSensitiveTableNames())//
+                .build())/**/
+        .withSetUpOp(annotation.setUpOperation())/**/
+        .withSkipOracleRecycleBinTables(annotation.skipOracleRecycleBinTables())/**/
+        .withTearDownOp(annotation.tearDownOperation())/**/
+        .withTableType(annotation.tableType())/**/
+        .withQualifiedTableNames(annotation.qualifiedTableNames())/**/
+        .withSchema(annotation.schema())/**/
+        .withDecorators(annotation.decorators()).build();
+    }
 
-		String[] dataSetResourceLocations = getExpectedResourceLocationsByConventions(annotation, testContext);
+    protected final ExpectedDataSetConfiguration buildExpectedConfiguration(ExpectedDataSet annotation, TestContext testContext) {
 
-		return newExpectedDataSetConfiguration()/**/
-		.withDataSetResourceLocations(dataSetResourceLocations)/**/
-		.withColumnsToIgnore(annotation.columnsToIgnore())/**/
-		.withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
-		.withDbType(annotation.dbType())/**/
-		.withEscapePattern(annotation.escapePattern())/**/
-		.withFormat(annotation.format())/**/
-		.withFormatOptions(newFormatOptions()//
-				.withColumnSensing(annotation.columnSensing())//
-				.withDtdLocation(StringUtils.hasText(annotation.dtdLocation()) ? annotation.dtdLocation() : null)//
-				.withDtdMetadata(annotation.dtdMetadata())//
-				.withCaseSensitiveTableNames(annotation.caseSensitiveTableNames())//
-				.build())/**/
-		.withTableType(annotation.tableType())/**/
-		.withQualifiedTableNames(annotation.qualifiedTableNames())/**/
-		.withSchema(annotation.schema())/**/
-		.build();
-	}
+        String[] dataSetResourceLocations = getExpectedResourceLocationsByConventions(annotation, testContext);
 
-	/**
-	 * @param annotation
-	 *            the DataSet annotation
-	 * @param testContext
-	 *            the context
-	 * @return an String array, containing the locations of resources 
-	 * @throws IOException
-	 *             I/O failure
-	 */
-	private String[] getResourceLocationsByConventions(DataSet annotation, TestContext testContext) throws IOException {
+        return newExpectedDataSetConfiguration()/**/
+        .withDataSetResourceLocations(dataSetResourceLocations)/**/
+        .withColumnsToIgnore(annotation.columnsToIgnore())/**/
+        .withDataSourceSpringName(StringUtils.hasText(annotation.dataSourceSpringName()) ? annotation.dataSourceSpringName() : null)/**/
+        .withDbType(annotation.dbType())/**/
+        .withEscapePattern(annotation.escapePattern())/**/
+        .withFormat(annotation.format())/**/
+        .withFormatOptions(newFormatOptions()//
+                .withColumnSensing(annotation.columnSensing())//
+                .withDtdLocation(StringUtils.hasText(annotation.dtdLocation()) ? annotation.dtdLocation() : null)//
+                .withDtdMetadata(annotation.dtdMetadata())//
+                .withCaseSensitiveTableNames(annotation.caseSensitiveTableNames())//
+                .build())/**/
+        .withTableType(annotation.tableType())/**/
+        .withQualifiedTableNames(annotation.qualifiedTableNames())/**/
+        .withSchema(annotation.schema())/**/
+        .build();
+    }
 
-		String[] valueLocations = annotation.value();
-		String[] locations = annotation.locations();
-		if (!ObjectUtils.isEmpty(valueLocations)) {
-			locations = valueLocations;
-		}
+    /**
+     * @param annotation the DataSet annotation
+     * @param testContext the context
+     * @return an String array, containing the locations of resources
+     * @throws IOException I/O failure
+     */
+    private String[] getResourceLocationsByConventions(DataSet annotation, TestContext testContext) {
 
-		return conventions.getDataSetResourcesLocations(testContext.getTestClass(), locations);
-	}
+        String[] valueLocations = annotation.value();
+        String[] locations = annotation.locations();
+        if (!ObjectUtils.isEmpty(valueLocations)) {
+            locations = valueLocations;
+        }
 
-	
-	/**
-	 * @param annotation
-	 *            the ExpectedDataSet annotation
-	 * @param testContext
-	 *            the context
-	 * @return an String array, containing the locations of resources 
-	 * @throws IOException
-	 *             I/O failure
-	 */
-	private String[] getExpectedResourceLocationsByConventions(ExpectedDataSet annotation, TestContext testContext) throws IOException {
+        return conventions.getDataSetResourcesLocations(testContext.getTestClass(), locations);
+    }
 
-		String[] valueLocations = annotation.value();
-		String[] locations = annotation.locations();
-		if (!ObjectUtils.isEmpty(valueLocations)) {
-			locations = valueLocations;
-		}
+    /**
+     * @param annotation the ExpectedDataSet annotation
+     * @param testContext the context
+     * @return an String array, containing the locations of resources
+     * @throws IOException I/O failure
+     */
+    private String[] getExpectedResourceLocationsByConventions(ExpectedDataSet annotation, TestContext testContext) {
 
-		return conventions.getExpectedDataSetResourcesLocations(testContext.getTestClass(), locations);
-	}
+        String[] valueLocations = annotation.value();
+        String[] locations = annotation.locations();
+        if (!ObjectUtils.isEmpty(valueLocations)) {
+            locations = valueLocations;
+        }
 
-	/**
-	 * @param method
-	 *            the test method
-	 * @param clazz
-	 *            the test class
-	 * @return the {@link DataSet} at method level if found, otherwise at class
-	 *         level
-	 */
-	private <A extends Annotation> A findAnnotation(Method method, Class<?> clazz, Class<A> annotationType) {
-		A annotation = AnnotationUtils.findAnnotation(method, annotationType);
-		return annotation == null ? annotation = AnnotationUtils.findAnnotation(clazz, annotationType) : annotation;
-	}
+        return conventions.getExpectedDataSetResourcesLocations(testContext.getTestClass(), locations);
+    }
+
+    /**
+     * @param method the test method
+     * @param clazz the test class
+     * @return the {@link DataSet} at method level if found, otherwise at class level
+     */
+    private <A extends Annotation> A findAnnotation(Method method, Class<?> clazz, Class<A> annotationType) {
+        A annotation = AnnotationUtils.findAnnotation(method, annotationType);
+        return annotation == null ? annotation = AnnotationUtils.findAnnotation(clazz, annotationType) : annotation;
+    }
 }

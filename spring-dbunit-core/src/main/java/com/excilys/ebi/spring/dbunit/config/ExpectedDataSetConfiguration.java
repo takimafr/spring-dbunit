@@ -31,209 +31,220 @@ import com.excilys.ebi.spring.dbunit.config.Constants.ConfigurationDefaults;
 
 public class ExpectedDataSetConfiguration implements DatabaseConnectionConfigurer {
 
-	private boolean disabled;
-	private String dataSourceSpringName;
-	private DBType dbType = ConfigurationDefaults.DEFAULT_DB_TYPE;
-	private String[] dataSetResourceLocations = new String[] { "classpath:expectedDataSet.xml" };
-	private String[] columnsToIgnore = new String[]{};
-	private DataSetFormat format = ConfigurationDefaults.DEFAULT_DB_FORMAT;
-	private DataSetFormatOptions formatOptions = new DataSetFormatOptions();
-	private String escapePattern = ConfigurationDefaults.DEFAULT_ESCAPE_PATTERN;
-	private boolean qualifiedTableNames = ConfigurationDefaults.DEFAULT_QUALIFIED_TABLE_NAMES;
-	private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
-	private String schema = ConfigurationDefaults.DEFAULT_SCHEMA;
+    private boolean disabled;
 
-	public IDataSet getDataSet() throws DataSetException, IOException {
-		List<IDataSet> dataSets = format.loadMultiple(formatOptions, dataSetResourceLocations);
-		return dataSets.size() == 1 ? dataSets.get(0) : new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
-	}
+    private String dataSourceSpringName;
 
-	public void configure(DatabaseConfig databaseConfig) {
+    private DBType dbType = ConfigurationDefaults.DEFAULT_DB_TYPE;
 
-		Assert.notNull(dbType, "dbType is required");
+    private String[] dataSetResourceLocations = new String[] { "classpath:expectedDataSet.xml" };
 
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dbType.getDataTypeFactory());
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, dbType.getMetadataHandler());
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN, escapePattern);
-		databaseConfig.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, formatOptions.isCaseSensitiveTableNames());
-		databaseConfig.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
-		databaseConfig.setProperty(DatabaseConfig.PROPERTY_TABLE_TYPE, tableType);
-	}
+    private String[] columnsToIgnore = new String[] {};
 
-	public static Builder newExpectedDataSetConfiguration() {
-		return new Builder();
-	}
+    private DataSetFormat format = ConfigurationDefaults.DEFAULT_DB_FORMAT;
 
-	public static class Builder {
+    private DataSetFormatOptions formatOptions = new DataSetFormatOptions();
 
-		private ExpectedDataSetConfiguration expectedDataSetConfiguration = new ExpectedDataSetConfiguration();
+    private String escapePattern = ConfigurationDefaults.DEFAULT_ESCAPE_PATTERN;
 
-		private Builder() {
-		}
+    private boolean qualifiedTableNames = ConfigurationDefaults.DEFAULT_QUALIFIED_TABLE_NAMES;
 
-		public Builder withDisabled(boolean disabled) {
-			expectedDataSetConfiguration.disabled = disabled;
-			return this;
-		}
+    private String[] tableType = ConfigurationDefaults.DEFAULT_TABLE_TYPE;
 
-		public Builder withDataSourceSpringName(String dataSourceSpringName) {
-			expectedDataSetConfiguration.dataSourceSpringName = dataSourceSpringName;
-			return this;
-		}
+    private String schema = ConfigurationDefaults.DEFAULT_SCHEMA;
 
-		public Builder withColumnsToIgnore(String[] columnsToIgnore) {
-			expectedDataSetConfiguration.columnsToIgnore = columnsToIgnore;
-			return this;
-		}
+    public IDataSet getDataSet() throws DataSetException, IOException {
+        List<IDataSet> dataSets = format.loadMultiple(formatOptions, dataSetResourceLocations);
+        return dataSets.size() == 1 ? dataSets.get(0) : new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
+    }
 
-		public Builder withDbType(DBType dbType) {
-			expectedDataSetConfiguration.dbType = dbType;
-			return this;
-		}
+    @Override
+    public void configure(DatabaseConfig databaseConfig) {
 
-		public Builder withDataSetResourceLocations(String[] dataSetResourceLocations) {
-			expectedDataSetConfiguration.dataSetResourceLocations = dataSetResourceLocations;
-			return this;
-		}
+        Assert.notNull(dbType, "dbType is required");
 
-		public Builder withFormat(DataSetFormat format) {
-			expectedDataSetConfiguration.format = format;
-			return this;
-		}
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dbType.getDataTypeFactory());
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, dbType.getMetadataHandler());
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN, escapePattern);
+        databaseConfig.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, formatOptions.isCaseSensitiveTableNames());
+        databaseConfig.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
+        databaseConfig.setProperty(DatabaseConfig.PROPERTY_TABLE_TYPE, tableType);
+    }
 
-		public Builder withFormatOptions(DataSetFormatOptions formatOptions) {
-			expectedDataSetConfiguration.formatOptions = formatOptions;
-			return this;
-		}
+    public static Builder newExpectedDataSetConfiguration() {
+        return new Builder();
+    }
 
-		public Builder withEscapePattern(String escapePattern) {
-			escapePattern = escapePattern.trim();
-			expectedDataSetConfiguration.escapePattern = escapePattern.isEmpty() ? null : escapePattern;
-			return this;
-		}
+    public static class Builder {
 
-		public Builder withQualifiedTableNames(boolean qualifiedTableNames) {
-			expectedDataSetConfiguration.qualifiedTableNames = qualifiedTableNames;
-			return this;
-		}
+        private ExpectedDataSetConfiguration expectedDataSetConfiguration = new ExpectedDataSetConfiguration();
 
-		public Builder withTableType(String[] tableType) {
-			if (tableType != null)
-				expectedDataSetConfiguration.tableType = tableType;
-			return this;
-		}
+        private Builder() {
+        }
 
-		public Builder withSchema(String schema) {
-			schema = schema.trim();
-			if (!schema.isEmpty())
-				expectedDataSetConfiguration.schema = schema;
-			return this;
-		}
+        public Builder withDisabled(boolean disabled) {
+            expectedDataSetConfiguration.disabled = disabled;
+            return this;
+        }
 
-		public ExpectedDataSetConfiguration build() throws DataSetException, IOException {
+        public Builder withDataSourceSpringName(String dataSourceSpringName) {
+            expectedDataSetConfiguration.dataSourceSpringName = dataSourceSpringName;
+            return this;
+        }
 
-			Assert.notNull(expectedDataSetConfiguration.dataSetResourceLocations, "dataSetResourceLocations is required");
-			Assert.notNull(expectedDataSetConfiguration.dbType, "dbType is required");
-			Assert.notNull(expectedDataSetConfiguration.format, "format is required");
-			Assert.notNull(expectedDataSetConfiguration.formatOptions, "formatOptions are required");
+        public Builder withColumnsToIgnore(String[] columnsToIgnore) {
+            expectedDataSetConfiguration.columnsToIgnore = columnsToIgnore;
+            return this;
+        }
 
-			return expectedDataSetConfiguration;
-		}
-	}
+        public Builder withDbType(DBType dbType) {
+            expectedDataSetConfiguration.dbType = dbType;
+            return this;
+        }
 
-	public String getDataSetResourceLocation() {
-		throw new UnsupportedOperationException();
-	}
+        public Builder withDataSetResourceLocations(String[] dataSetResourceLocations) {
+            expectedDataSetConfiguration.dataSetResourceLocations = dataSetResourceLocations;
+            return this;
+        }
 
-	public void setDataSetResourceLocation(String dataSetResourceLocation) {
-		this.dataSetResourceLocations = tokenizeToStringArray(dataSetResourceLocation, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-	}
+        public Builder withFormat(DataSetFormat format) {
+            expectedDataSetConfiguration.format = format;
+            return this;
+        }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+        public Builder withFormatOptions(DataSetFormatOptions formatOptions) {
+            expectedDataSetConfiguration.formatOptions = formatOptions;
+            return this;
+        }
 
-	public String getDataSourceSpringName() {
-		return dataSourceSpringName;
-	}
+        public Builder withEscapePattern(String escapePattern) {
+            escapePattern = escapePattern.trim();
+            expectedDataSetConfiguration.escapePattern = escapePattern.isEmpty() ? null : escapePattern;
+            return this;
+        }
 
-	public DBType getDbType() {
-		return dbType;
-	}
+        public Builder withQualifiedTableNames(boolean qualifiedTableNames) {
+            expectedDataSetConfiguration.qualifiedTableNames = qualifiedTableNames;
+            return this;
+        }
 
-	public String[] getDataSetResourceLocations() {
-		return dataSetResourceLocations;
-	}
+        public Builder withTableType(String[] tableType) {
+            if (tableType != null)
+                expectedDataSetConfiguration.tableType = tableType;
+            return this;
+        }
 
-	public DataSetFormat getFormat() {
-		return format;
-	}
+        public Builder withSchema(String schema) {
+            schema = schema.trim();
+            if (!schema.isEmpty())
+                expectedDataSetConfiguration.schema = schema;
+            return this;
+        }
 
-	public DataSetFormatOptions getFormatOptions() {
-		return formatOptions;
-	}
+        public ExpectedDataSetConfiguration build() {
 
-	public String getEscapePattern() {
-		return escapePattern;
-	}
+            Assert.notNull(expectedDataSetConfiguration.dataSetResourceLocations, "dataSetResourceLocations is required");
+            Assert.notNull(expectedDataSetConfiguration.dbType, "dbType is required");
+            Assert.notNull(expectedDataSetConfiguration.format, "format is required");
+            Assert.notNull(expectedDataSetConfiguration.formatOptions, "formatOptions are required");
 
-	public boolean isQualifiedTableNames() {
-		return qualifiedTableNames;
-	}
+            return expectedDataSetConfiguration;
+        }
+    }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+    public String getDataSetResourceLocation() {
+        throw new UnsupportedOperationException();
+    }
 
-	public void setDataSourceSpringName(String dataSourceSpringName) {
-		this.dataSourceSpringName = dataSourceSpringName;
-	}
+    public void setDataSetResourceLocation(String dataSetResourceLocation) {
+        this.dataSetResourceLocations = tokenizeToStringArray(dataSetResourceLocation, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+    }
 
-	public void setDbType(DBType dbType) {
-		this.dbType = dbType;
-	}
+    public boolean isDisabled() {
+        return disabled;
+    }
 
-	public void setDataSetResourceLocations(String[] dataSetResourceLocations) {
-		this.dataSetResourceLocations = dataSetResourceLocations;
-	}
+    public String getDataSourceSpringName() {
+        return dataSourceSpringName;
+    }
 
-	public void setFormat(DataSetFormat format) {
-		this.format = format;
-	}
+    public DBType getDbType() {
+        return dbType;
+    }
 
-	public void setFormatOptions(DataSetFormatOptions formatOptions) {
-		this.formatOptions = formatOptions;
-	}
+    public String[] getDataSetResourceLocations() {
+        return dataSetResourceLocations;
+    }
 
-	public void setEscapePattern(String escapePattern) {
-		this.escapePattern = escapePattern;
-	}
+    public DataSetFormat getFormat() {
+        return format;
+    }
 
-	public void setQualifiedTableNames(boolean qualifiedTableNames) {
-		this.qualifiedTableNames = qualifiedTableNames;
-	}
+    public DataSetFormatOptions getFormatOptions() {
+        return formatOptions;
+    }
 
-	public String[] getTableType() {
-		return tableType;
-	}
+    public String getEscapePattern() {
+        return escapePattern;
+    }
 
-	public void setTableType(String[] tableType) {
-		this.tableType = tableType;
-	}
+    public boolean isQualifiedTableNames() {
+        return qualifiedTableNames;
+    }
 
-	public String getSchema() {
-		return schema;
-	}
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
+    public void setDataSourceSpringName(String dataSourceSpringName) {
+        this.dataSourceSpringName = dataSourceSpringName;
+    }
 
-	public String[] getColumnsToIgnore() {
-		return columnsToIgnore;
-	}
+    public void setDbType(DBType dbType) {
+        this.dbType = dbType;
+    }
 
-	public void setColumnsToIgnore(String[] columnsToIgnore) {
-		this.columnsToIgnore = columnsToIgnore;
-	}
+    public void setDataSetResourceLocations(String[] dataSetResourceLocations) {
+        this.dataSetResourceLocations = dataSetResourceLocations;
+    }
+
+    public void setFormat(DataSetFormat format) {
+        this.format = format;
+    }
+
+    public void setFormatOptions(DataSetFormatOptions formatOptions) {
+        this.formatOptions = formatOptions;
+    }
+
+    public void setEscapePattern(String escapePattern) {
+        this.escapePattern = escapePattern;
+    }
+
+    public void setQualifiedTableNames(boolean qualifiedTableNames) {
+        this.qualifiedTableNames = qualifiedTableNames;
+    }
+
+    public String[] getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(String[] tableType) {
+        this.tableType = tableType;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    public String[] getColumnsToIgnore() {
+        return columnsToIgnore;
+    }
+
+    public void setColumnsToIgnore(String[] columnsToIgnore) {
+        this.columnsToIgnore = columnsToIgnore;
+    }
 }

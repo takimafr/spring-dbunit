@@ -30,12 +30,10 @@ import com.excilys.ebi.spring.dbunit.config.ExpectedDataSetConfiguration;
 import com.excilys.ebi.spring.dbunit.config.Phase;
 
 /**
- * Spring test framework TestExecutionListener for executing DBUnit operations
- * on JUnit tests setup and teardown. A typical use case is to load a DataSet on
- * setUp and revert the changes on teardown.
+ * Spring test framework TestExecutionListener for executing DBUnit operations on JUnit tests setup and teardown. A
+ * typical use case is to load a DataSet on setUp and revert the changes on teardown.
  * 
- * It looks for a {@DataSet} annotation to instanciate the
- * configuration.
+ * It looks for a {@DataSet} annotation to instanciate the configuration.
  * 
  * @see #processLocation for conventions on how the resource is loaded
  * 
@@ -43,53 +41,53 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
  */
 public class DataSetTestExecutionListener extends AbstractTestExecutionListener {
 
-	protected DataLoader dataLoader = new DefaultDataLoader();
-	protected DataReader dataReader = new DefaultDataReader();
-	protected ConfigurationProcessor<TestContext> configurationProcessor = new TestConfigurationProcessor();
+    protected DataLoader dataLoader = new DefaultDataLoader();
 
-	protected DataSetConfiguration getConfiguration(TestContext testContext) throws Exception {
-		return configurationProcessor.getConfiguration(testContext);
-	}
+    protected DataReader dataReader = new DefaultDataReader();
 
-	protected ExpectedDataSetConfiguration getExpectedConfiguration(TestContext testContext) throws Exception {
-		return configurationProcessor.getExpectedConfiguration(testContext);
-	}
+    protected ConfigurationProcessor<TestContext> configurationProcessor = new TestConfigurationProcessor();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void beforeTestMethod(TestContext testContext) throws Exception {
-		dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.SETUP);
-	}
+    protected DataSetConfiguration getConfiguration(TestContext testContext) throws Exception {
+        return configurationProcessor.getConfiguration(testContext);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void afterTestMethod(TestContext testContext) throws Exception {
-		try {
-			checkDatas(testContext);
-		}
-		finally {
-			dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.TEARDOWN);
-		}
-	}
-	
-	private void checkDatas(TestContext testContext) throws Exception {
-		ExpectedDataSetConfiguration expectedConfiguration = getExpectedConfiguration(testContext);
-		if (expectedConfiguration != null) {
-			IDataSet expectedDataSet = expectedConfiguration.getDataSet();
-			for (String tableName : expectedDataSet.getTableNames()) {
-				IDataSet dataSet = dataReader.execute(testContext.getApplicationContext(), getExpectedConfiguration(testContext), tableName);
-				String[] columnsToIgnore = expectedConfiguration.getColumnsToIgnore();
-				if (columnsToIgnore == null || columnsToIgnore.length == 0) {
-					Assertion.assertEquals(expectedDataSet, dataSet);
-				}
-				else {
-					Assertion.assertEqualsIgnoreCols(expectedDataSet, dataSet, tableName, columnsToIgnore);
-				}
-			}
-		}
-	}
+    protected ExpectedDataSetConfiguration getExpectedConfiguration(TestContext testContext) {
+        return configurationProcessor.getExpectedConfiguration(testContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void beforeTestMethod(TestContext testContext) throws Exception {
+        dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.SETUP);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void afterTestMethod(TestContext testContext) throws Exception {
+        try {
+            checkDatas(testContext);
+        } finally {
+            dataLoader.execute(testContext.getApplicationContext(), getConfiguration(testContext), Phase.TEARDOWN);
+        }
+    }
+
+    private void checkDatas(TestContext testContext) throws Exception {
+        ExpectedDataSetConfiguration expectedConfiguration = getExpectedConfiguration(testContext);
+        if (expectedConfiguration != null) {
+            IDataSet expectedDataSet = expectedConfiguration.getDataSet();
+            for (String tableName : expectedDataSet.getTableNames()) {
+                IDataSet dataSet = dataReader.execute(testContext.getApplicationContext(), getExpectedConfiguration(testContext), tableName);
+                String[] columnsToIgnore = expectedConfiguration.getColumnsToIgnore();
+                if (columnsToIgnore == null || columnsToIgnore.length == 0) {
+                    Assertion.assertEquals(expectedDataSet, dataSet);
+                } else {
+                    Assertion.assertEqualsIgnoreCols(expectedDataSet, dataSet, tableName, columnsToIgnore);
+                }
+            }
+        }
+    }
 }
