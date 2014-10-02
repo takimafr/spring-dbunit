@@ -1,8 +1,8 @@
 ![](https://travis-ci.org/excilys/spring-dbunit.svg)
 
-## What for?
+## Goal
 
-spring-dbunit provides [DBUnit](http://www.dbunit.org) add-ons for Spring Framework.
+Spring DBunit provides [DBUnit](http://www.dbunit.org) add-ons for Spring Framework.
 
 It allows you to easily insert and cleanup test data into the database of your choice.
 
@@ -25,9 +25,9 @@ Starting from 1.4.0, releases are in Maven Central, all you need to add to your 
 </dependency>
 ```
 
-For older versions, see: [Maven](https://github.com/excilys/spring-dbunit/wiki/maven) Wiki page.
+For older versions of Spring DBUnit, read [the Maven](https://github.com/excilys/spring-dbunit/wiki/maven) Wiki page.
 
->Note that you need version 1.1.X if you use Spring 3.X
+>Note that you need version 1.1.X of DBUnit if you use Spring 3.X
 
 ## Documentation
 
@@ -37,7 +37,7 @@ Have a look at these Wiki pages for documentation :
 * [Servlet support](https://github.com/excilys/spring-dbunit/wiki/spring-dbunit-servlet-module)
 
 ## Release Notes
-See [Github's Milestones](https://github.com/excilys/spring-dbunit/issues/milestones?state=closed)
+See [Github's Milestones](https://github.com/excilys/spring-dbunit/milestones?state=closed)
 
 ## License
 
