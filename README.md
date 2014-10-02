@@ -1,13 +1,8 @@
 ![](https://travis-ci.org/excilys/spring-dbunit.svg)
 
-# spring-dbunit 1.3.0
-
-> 1.2 was a breaking change only compatible with Spring 4. For Spring < 4 users, please use 1.1.x.
-
-
 ## What for?
 
-spring-dbunit provides [DBUnit](http://www.dbunit.org) add-ons for Spring.
+spring-dbunit provides [DBUnit](http://www.dbunit.org) add-ons for Spring Framework.
 
 It allows you to easily insert and cleanup test data into the database of your choice.
 
@@ -17,17 +12,33 @@ Use cases examples :
 * GUI integration tests with Selenium, with a persistent database and an existing schema.
 * application prototype development, with data reloaded on application startup
 
+## Getting Spring DBUnit
+
+Starting from 1.4.0, releases are in Maven Central, all you need to add to your POM is:
+
+```xml
+<dependency>
+	<groupId>com.excilys.ebi.spring-dbunit</groupId>
+	<!-- or spring-dbunit-servlet -->
+	<artifactId>spring-dbunit-test</artifactId>
+	<version>1.4.0</version>
+</dependency>
+```
+
+For older versions, see: [Maven](https://github.com/excilys/spring-dbunit/wiki/maven) Wiki page.
+
+>Note that you need version 1.1.X if you use Spring 3.X
+
 ## Documentation
 
-Have a look at the Wiki for modules documentation :
+Have a look at these Wiki pages for documentation :
 
 * [Test support](https://github.com/excilys/spring-dbunit/wiki/spring-dbunit-test-module)
 * [Servlet support](https://github.com/excilys/spring-dbunit/wiki/spring-dbunit-servlet-module)
 
-## Where are the binaries?
-
-See [Maven](https://github.com/excilys/spring-dbunit/wiki/maven) Wiki page.
-
 ## Release Notes
-See [Milestones](https://github.com/excilys/spring-dbunit/issues/milestones?state=closed)
+See [Github's Milestones](https://github.com/excilys/spring-dbunit/issues/milestones?state=closed)
 
+## License
+
+Spring DBUnit is released under the Apache Software License v2.0 (See LICENSE file)
