@@ -23,4 +23,6 @@
 	<MY_ENTITY ID="id3" NAME="name3" />
 	<MY_ENTITY ID="id4" NAME="name4" />
 
+    <MY_ANOTHER_ENTITY ID="id1" NAME="name1"/>
+
 </dataset>
