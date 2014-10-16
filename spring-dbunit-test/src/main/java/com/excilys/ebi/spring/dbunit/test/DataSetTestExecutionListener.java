@@ -32,11 +32,11 @@ import com.excilys.ebi.spring.dbunit.config.Phase;
 /**
  * Spring test framework TestExecutionListener for executing DBUnit operations on JUnit tests setup and teardown. A
  * typical use case is to load a DataSet on setUp and revert the changes on teardown.
- * 
+ *
  * It looks for a {@DataSet} annotation to instanciate the configuration.
- * 
+ *
  * @see #processLocation for conventions on how the resource is loaded
- * 
+ *
  * @author <a href="mailto:slandelle@excilys.com">Stephane LANDELLE</a>
  */
 public class DataSetTestExecutionListener extends AbstractTestExecutionListener {
@@ -83,9 +83,9 @@ public class DataSetTestExecutionListener extends AbstractTestExecutionListener 
                 IDataSet dataSet = dataReader.execute(testContext.getApplicationContext(), getExpectedConfiguration(testContext), tableName);
                 String[] columnsToIgnore = expectedConfiguration.getColumnsToIgnore();
                 if (columnsToIgnore == null || columnsToIgnore.length == 0) {
-                    Assertion.assertEquals(expectedDataSet, dataSet);
+                    Assertion.assertEquals(expectedDataSet.getTable(tableName), dataSet.getTable(tableName));
                 } else {
-                    Assertion.assertEqualsIgnoreCols(expectedDataSet, dataSet, tableName, columnsToIgnore);
+                    Assertion.assertEqualsIgnoreCols(expectedDataSet.getTable(tableName), dataSet.getTable(tableName), columnsToIgnore);
                 }
             }
         }
