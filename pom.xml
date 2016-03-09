@@ -70,7 +70,7 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.1.2</logback.version>
 		<commons-logging.version>99.0-does-not-exist</commons-logging.version>
-		<commons-collections.version>3.2.1</commons-collections.version>
+		<commons-collections.version>3.2.2</commons-collections.version>
 		<tomcat-slf4j.version>1.0.0</tomcat-slf4j.version>
 		<tomcat-jdbc.version>7.0.55</tomcat-jdbc.version>
 		<servlet-api.version>2.5</servlet-api.version>
