@@ -2,7 +2,7 @@
 
 ## Goal
 
-Spring DBunit provides [DBUnit](http://www.dbunit.org) add-ons for Spring Framework.
+Spring DBunit provides [DBUnit](http://dbunit.sourceforge.net/) add-ons for Spring Framework.
 
 It allows you to easily insert and cleanup test data into the database of your choice.
 
