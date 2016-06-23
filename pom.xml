@@ -67,8 +67,8 @@
 		<hibernate.version>3.6.10.Final</hibernate.version>
 		<javassist.version>3.18.2-GA</javassist.version>
 		<antlr.version>2.7.7</antlr.version>
-		<slf4j.version>1.7.5</slf4j.version>
-		<logback.version>1.1.2</logback.version>
+		<slf4j.version>1.7.21</slf4j.version>
+		<logback.version>1.1.7</logback.version>
 		<commons-logging.version>99.0-does-not-exist</commons-logging.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<tomcat-slf4j.version>1.0.0</tomcat-slf4j.version>
