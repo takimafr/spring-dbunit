@@ -1,4 +1,4 @@
-![https://travis-ci.org/excilys/spring-dbunit](https://travis-ci.org/excilys/spring-dbunit.svg)
+[![Build Status](https://travis-ci.org/excilys/spring-dbunit.svg?branch=master)](https://travis-ci.org/excilys/spring-dbunit)
 
 ## Goal
 
