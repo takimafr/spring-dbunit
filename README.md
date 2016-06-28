@@ -1,4 +1,4 @@
-![](https://travis-ci.org/excilys/spring-dbunit.svg)
+![https://travis-ci.org/excilys/spring-dbunit](https://travis-ci.org/excilys/spring-dbunit.svg)
 
 ## Goal
 
