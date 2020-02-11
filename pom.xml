@@ -50,7 +50,7 @@
 		<!-- It would be nice to to use this repo. Seems that it contains commons-logging and tomcat-slf4j -->
 		<repository>
 			<id>excilys-thirdparty</id>
-			<url>http://repository.excilys.com/content/repositories/thirdparty</url>
+			<url>https://repository.excilys.com/content/repositories/thirdparty</url>
 		</repository>
 	</repositories>
 
